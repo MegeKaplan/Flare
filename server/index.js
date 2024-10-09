@@ -3,6 +3,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 
 const config = dotenv.config();
 
@@ -15,6 +16,7 @@ app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/api", authRoutes);
+app.use("/api", userRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Server is running..." });

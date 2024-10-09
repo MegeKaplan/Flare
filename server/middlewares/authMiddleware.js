@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import MESSAGES from "../constants/messages.js";
 
-const authMiddleware = (req, res, next) => {
+const verifyToken = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
@@ -17,4 +17,4 @@ const authMiddleware = (req, res, next) => {
   }
 };
 
-export default authMiddleware;
+export { verifyToken };
