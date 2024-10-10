@@ -106,3 +106,56 @@ export const deleteUser = async (req, res) => {
       .json({ message: MESSAGES.ERROR_OCCURRED, error: error.message });
   }
 };
+
+export const followUser = async (req, res) => {
+  try {
+    const { followerId, followingId } = req.body;
+
+    const existingFollow = await db("user_followers")
+      .select("*")
+      .where({ follower_id: followerId, following_id: followingId })
+      .first();
+
+    if (existingFollow) {
+      return res.status(400).json({ message: MESSAGES.USER_ALREADY_FOLLOWING });
+    }
+
+    await db("user_followers").insert({
+      follower_id: followerId,
+      following_id: followingId,
+    });
+
+    res.status(200).json({ message: MESSAGES.USER_FOLLOW_SUCCESS });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: MESSAGES.ERROR_OCCURRED, error: error.message });
+  }
+};
+
+export const unfollowUser = async (req, res) => {
+  try {
+    const { followerId, followingId } = req.body;
+
+    const followRelationship = await db("user_followers")
+      .select("*")
+      .where({ follower_id: followerId, following_id: followingId })
+      .first();
+
+    if (!followRelationship) {
+      return res
+        .status(400)
+        .json({ message: MESSAGES.USER_NOT_BEING_FOLLOWED });
+    }
+
+    await db("user_followers")
+      .where({ follower_id: followerId, following_id: followingId })
+      .del();
+
+    res.status(200).json({ message: MESSAGES.USER_UNFOLLOW_SUCCESS });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: MESSAGES.ERROR_OCCURRED, error: error.message });
+  }
+};
