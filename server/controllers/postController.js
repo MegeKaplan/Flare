@@ -7,8 +7,23 @@ export const getPosts = async (req, res) => {
     const query = req.query;
 
     const posts = await db("posts")
-      .select("*")
-      .where({ is_deleted: false, ...query });
+      .leftJoin("post_images", "posts.id", "post_images.post_id")
+      .leftJoin("post_actions", "posts.id", "post_actions.post_id")
+      .select(
+        "posts.*",
+        db.raw("GROUP_CONCAT(DISTINCT post_images.image_url) as images"),
+        db.raw(
+          "GROUP_CONCAT(DISTINCT CASE WHEN post_actions.action = 'like' THEN post_actions.user_id END) as likes"
+        ),
+        db.raw(
+          "GROUP_CONCAT(DISTINCT CASE WHEN post_actions.action = 'save' THEN post_actions.user_id END) as saves"
+        ),
+        db.raw(
+          "GROUP_CONCAT(DISTINCT CASE WHEN post_actions.action = 'comment' THEN post_actions.user_id END) as comments"
+        )
+      )
+      .where({ is_deleted: false, ...query })
+      .groupBy("posts.id");
 
     res
       .status(200)
@@ -26,9 +41,23 @@ export const getPost = async (req, res) => {
     const postId = req.params.id;
 
     const post = await db("posts")
-      .select("*")
-      .where({ is_deleted: false, id: postId, ...query })
-      .first();
+      .leftJoin("post_images", "posts.id", "post_images.post_id")
+      .leftJoin("post_actions", "posts.id", "post_actions.post_id")
+      .select(
+        "posts.*",
+        db.raw("GROUP_CONCAT(DISTINCT post_images.image_url) as images"),
+        db.raw(
+          "GROUP_CONCAT(DISTINCT CASE WHEN post_actions.action = 'like' THEN post_actions.user_id END) as likes"
+        ),
+        db.raw(
+          "GROUP_CONCAT(DISTINCT CASE WHEN post_actions.action = 'save' THEN post_actions.user_id END) as saves"
+        ),
+        db.raw(
+          "GROUP_CONCAT(DISTINCT CASE WHEN post_actions.action = 'comment' THEN post_actions.user_id END) as comments"
+        )
+      )
+      .where({ "posts.id": postId, is_deleted: false, ...query })
+      .groupBy("posts.id");
 
     res
       .status(200)
