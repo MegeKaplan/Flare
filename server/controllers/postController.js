@@ -57,7 +57,8 @@ export const getPost = async (req, res) => {
         )
       )
       .where({ "posts.id": postId, is_deleted: false, ...query })
-      .groupBy("posts.id");
+      .groupBy("posts.id")
+      .first();
 
     res
       .status(200)
