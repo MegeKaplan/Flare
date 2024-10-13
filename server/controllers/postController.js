@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 
 export const getPosts = async (req, res) => {
   try {
-    const query = req.query;
+    const { sortBy, sortOrder, offset, limit, ...query } = req.query;
 
     const posts = await db("posts")
       .leftJoin("post_images", "posts.id", "post_images.post_id")
@@ -23,7 +23,10 @@ export const getPosts = async (req, res) => {
         )
       )
       .where({ is_deleted: false, ...query })
-      .groupBy("posts.id");
+      .groupBy("posts.id")
+      .orderBy(sortBy ? sortBy : "created_at", sortOrder ? sortOrder : "desc")
+      .offset(offset ? offset : 0)
+      .limit(limit);
 
     res
       .status(200)
