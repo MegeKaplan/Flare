@@ -5,8 +5,9 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
+import storageRoutes from "./routes/storageRoutes.js";
 
-const config = dotenv.config();
+dotenv.config();
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use("/api", authRoutes);
 app.use("/api", userRoutes);
 app.use("/api", postRoutes);
+app.use("/api", storageRoutes);
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Server is running..." });

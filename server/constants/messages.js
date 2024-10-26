@@ -21,6 +21,8 @@ export default {
   ACTION_ALREADY_EXIST: "Eylem zaten mevcut!",
   ACTION_SUCCESS: (action) => `Post ${action} işlemi başarılı.`,
   ACTION_IS_NOT_VALID: "Eylem geçerli değil!",
+  FILE_UPLOAD_SUCCESS: "Dosya başarıyla yüklendi.",
+  FILES_UPLOAD_SUCCESS: "Dosyalar başarıyla yüklendi.",
   NO_TOKEN_PROVIDED: "Token bulunamadı!",
   INVALID_TOKEN: "Token doğrulanamadı!",
   ERROR_OCCURRED: "Bir hata oluştu!",
