@@ -1,9 +1,25 @@
+import db from "../config/db/db_conn.js";
 import { uploadFiles } from "../services/storageService.js";
 import MESSAGES from "../constants/messages.js";
 
 export const uploadToStorage = async (req, res) => {
   try {
     const uploadedFiles = await uploadFiles(req.files);
+    const { tableName, id, url } = req.body;
+
+    if (!(["post_images", "user_images"].includes(tableName) && id && url)) {
+      return res.status(400).json({
+        message: MESSAGES.MISSING_PARAMETERS,
+      });
+    }
+
+    const files = [];
+    for (const file of uploadedFiles) {
+      tableName === "post_images"
+        ? files.push({ post_id: id, image_url: file.url })
+        : files.push({ user_id: id, image_url: file.url });
+    }
+    await db(tableName).insert(files);
 
     res.status(201).json({
       message:
