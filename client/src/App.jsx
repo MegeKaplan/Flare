@@ -1,9 +1,30 @@
+import { Route, Routes } from "react-router-dom";
+import Header from "./components/Header";
+import Nav from "./components/Nav";
+import Home from "./pages/Home";
+import Auth from "./pages/Auth";
+import Settings from "./pages/Settings";
+import Search from "./pages/Search";
+import NewPost from "./pages/NewPost";
+import Discover from "./pages/Discover";
+import Profile from "./pages/Profile";
+
 function App() {
   return (
-    <div className="w-full h-[100vh] flex items-center justify-center bg-amber-300">
-      <h1 className="text-9xl text-gray-900 font-black">Hello Flare!</h1>
-    </div>
+    <>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/auth" element={<Auth />} />
+        <Route path="/settings" element={<Settings />} />
+        <Route path="/search" element={<Search />} />
+        <Route path="/new-post" element={<NewPost />} />
+        <Route path="/discover" element={<Discover />} />
+        <Route path="/profile" element={<Profile />} />
+      </Routes>
+      <Nav />
+    </>
   );
 }
 
-export default App
+export default App;
