@@ -8,6 +8,9 @@ import Search from "./pages/Search";
 import NewPost from "./pages/NewPost";
 import Discover from "./pages/Discover";
 import Profile from "./pages/Profile";
+import { ToastContainer } from "react-toastify";
+import { toastifyContainerConfig } from "./config/toastifyConfig";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -23,6 +26,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
       </Routes>
       <Nav />
+      <ToastContainer {...toastifyContainerConfig} />
     </>
   );
 }

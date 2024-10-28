@@ -1,0 +1,10 @@
+export const MESSAGES = {
+  CONTENT_LOADING: "İçerik yükleniyor...",
+  ERROR_OCCURRED: "Bir hata oluştu!",
+  USERNAME_REQUIRED: "Kullanıcı adı boş bırakılamaz!",
+  EMAIL_REQUIRED: "E-posta boş bırakılamaz!",
+  EMAIL_INVALID: "Geçersiz e-posta adresi!",
+  PASSWORD_REQUIRED: "Şifre boş bırakılamaz!",
+  PASSWORD_LENGTH: (minLength) =>
+    `Şifre en az ${minLength} karakter olmalıdır!`,
+};
