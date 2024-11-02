@@ -3,6 +3,7 @@ import { toast } from "react-toastify";
 import { MESSAGES } from "../constants/messages";
 import { FaFileMedical } from "react-icons/fa6";
 import { AiOutlineClear } from "react-icons/ai";
+import axios from "axios";
 
 const NewPost = () => {
   const [images, setImages] = useState([]);
@@ -31,7 +32,7 @@ const NewPost = () => {
     setPostData({ ...postData, [name]: checked });
   };
 
-  const handlePostSubmit = (e) => {
+  const handlePostSubmit = async (e) => {
     e.preventDefault();
     if (images.length === 0) {
       toast.error(MESSAGES.IMAGE_REQUIRED);
@@ -41,7 +42,40 @@ const NewPost = () => {
       toast.error(MESSAGES.POST_CONTENT_REQUIRED);
       return;
     }
-    toast.success("Post başarıyla paylaşıldı!");
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/posts`,
+        postData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      const formData = new FormData();
+      images.forEach((image) => {
+        formData.append("files", image);
+      });
+      formData.append("id", response.data.response);
+      formData.append("tableName", "post_images");
+      await axios.post(`${import.meta.env.VITE_API_URL}/storage`, formData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      if (response.status === 201) {
+        setImages([]);
+        setPostData({
+          content: "",
+          is_story: false,
+          sender_id: Number(localStorage.getItem("userId")),
+        });
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
   };
 
   return (
