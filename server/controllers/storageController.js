@@ -5,9 +5,9 @@ import MESSAGES from "../constants/messages.js";
 export const uploadToStorage = async (req, res) => {
   try {
     const uploadedFiles = await uploadFiles(req.files);
-    const { tableName, id, url } = req.body;
+    const { tableName, id } = req.body;
 
-    if (!(["post_images", "user_images"].includes(tableName) && id && url)) {
+    if (!(["post_images", "user_images"].includes(tableName) && id)) {
       return res.status(400).json({
         message: MESSAGES.MISSING_PARAMETERS,
       });
