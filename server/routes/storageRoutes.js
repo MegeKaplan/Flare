@@ -1,5 +1,8 @@
 import express from "express";
-import { uploadToStorage } from "../controllers/storageController.js";
+import {
+  deleteFromDB,
+  uploadToStorage,
+} from "../controllers/storageController.js";
 import { verifyToken } from "../middlewares/authMiddleware.js";
 import multer from "multer";
 
@@ -16,5 +19,7 @@ router.post(
   upload.array("files", fileLimit),
   uploadToStorage
 );
+
+router.delete("/storage/:id", verifyToken, deleteFromDB);
 
 export default router;

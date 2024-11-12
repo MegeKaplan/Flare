@@ -23,6 +23,8 @@ export default {
   ACTION_IS_NOT_VALID: "Eylem geçerli değil!",
   FILE_UPLOAD_SUCCESS: "Dosya başarıyla yüklendi.",
   FILES_UPLOAD_SUCCESS: "Dosyalar başarıyla yüklendi.",
+  FILE_DELETE_SUCCESS: "Dosya başarıyla silindi.",
+  FILES_DELETE_SUCCESS: "Dosyalar başarıyla silindi.",
   MISSING_PARAMETERS: "Gerekli parametreler eksik veya hatalı!",
   NO_TOKEN_PROVIDED: "Token bulunamadı!",
   INVALID_TOKEN: "Token doğrulanamadı!",
