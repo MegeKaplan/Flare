@@ -5,9 +5,8 @@ import { FaFileMedical } from "react-icons/fa6";
 import { AiOutlineClear } from "react-icons/ai";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import messages from "../../../server/constants/messages";
 
-const NewPost = () => {
+const EditPost = () => {
   const [images, setImages] = useState([]);
   const [postData, setPostData] = useState({
     content: "",
@@ -187,12 +186,12 @@ const NewPost = () => {
             className="mr-2"
           />
           <label htmlFor="is_story" className="font-semibold">
-            Story Olarak Paylaş
+            Story Olarak Ayarla
           </label>
         </div>
         <div className="w-full p-2">
           <button className="w-full p-2 outline-none rounded bg-primary-400 hover:bg-primary-500 transition">
-            Paylaş
+            Güncelle
           </button>
         </div>
       </form>
