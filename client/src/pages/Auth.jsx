@@ -4,6 +4,7 @@ import { toastifyEmitterConfig } from "../config/toastifyConfig";
 import { MESSAGES } from "../constants/messages";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import Button from "../components/ui/Button";
 
 const Auth = () => {
   const [signUp, setSignUp] = useState(false);
@@ -128,9 +129,7 @@ const Auth = () => {
             />
           </div>
           <div className="w-full p-2">
-            <button className="w-full p-2 outline-none rounded bg-primary-400 hover:bg-primary-500 transition">
-              {signUp ? "Kayıt Ol" : "Giriş Yap"}
-            </button>
+            <Button text={signUp ? "Kayıt Ol" : "Giriş Yap"} color="primary" />
           </div>
           <span className="flex items-center justify-center m-1">
             <span className="mr-1">

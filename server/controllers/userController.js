@@ -7,8 +7,26 @@ export const getUsers = async (req, res) => {
     const query = req.query;
 
     const users = await db("users")
-      .select("*")
-      .where({ is_deleted: false, ...query });
+      .leftJoin(
+        "user_followers as followers",
+        "users.id",
+        "followers.following_id"
+      )
+      .leftJoin(
+        "user_followers as followings",
+        "users.id",
+        "followings.follower_id"
+      )
+      // .leftJoin("user_images as images", "users.id", "images.user_id")
+      .select(
+        "users.*",
+        db.raw("GROUP_CONCAT(DISTINCT followers.follower_id) as followers"),
+        db.raw("GROUP_CONCAT(DISTINCT followings.following_id) as followings")
+        // db.raw(`GROUP_CONCAT(DISTINCT CASE WHEN images.type = 'banner' THEN images.image_url END) as bannerUrl`),
+        // db.raw(`GROUP_CONCAT(DISTINCT CASE WHEN images.type = 'profile_picture' THEN images.image_url END) as profilePictureUrl`)
+      )
+      .where({ "users.is_deleted": false, ...query })
+      .groupBy("users.id");
 
     res
       .status(200)
@@ -26,8 +44,26 @@ export const getUser = async (req, res) => {
     const userId = req.params.id;
 
     const user = await db("users")
-      .select("*")
-      .where({ is_deleted: false, id: userId, ...query })
+      .leftJoin(
+        "user_followers as followers",
+        "users.id",
+        "followers.following_id"
+      )
+      .leftJoin(
+        "user_followers as followings",
+        "users.id",
+        "followings.follower_id"
+      )
+      // .leftJoin("user_images as images", "users.id", "images.user_id")
+      .select(
+        "users.*",
+        db.raw("GROUP_CONCAT(DISTINCT followers.follower_id) as followers"),
+        db.raw("GROUP_CONCAT(DISTINCT followings.following_id) as followings")
+        // db.raw(`GROUP_CONCAT(DISTINCT CASE WHEN images.type = 'banner' THEN images.image_url END) as bannerUrl`),
+        // db.raw(`GROUP_CONCAT(DISTINCT CASE WHEN images.type = 'profile_picture' THEN images.image_url END) as profilePictureUrl`)
+      )
+      .where({ "users.is_deleted": false, "users.id": userId, ...query })
+      .groupBy("users.id")
       .first();
 
     res

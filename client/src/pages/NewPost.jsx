@@ -4,6 +4,7 @@ import { MESSAGES } from "../constants/messages";
 import { FaFileMedical } from "react-icons/fa6";
 import { AiOutlineClear } from "react-icons/ai";
 import axios from "axios";
+import Button from "../components/ui/Button";
 
 const NewPost = () => {
   const [images, setImages] = useState([]);
@@ -147,9 +148,7 @@ const NewPost = () => {
           </label>
         </div>
         <div className="w-full p-2">
-          <button className="w-full p-2 outline-none rounded bg-primary-400 hover:bg-primary-500 transition">
-            Paylaş
-          </button>
+          <Button text="Paylaş" color="primary" />
         </div>
       </form>
     </div>

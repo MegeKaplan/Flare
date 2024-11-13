@@ -12,7 +12,7 @@ import { verifyToken } from "../middlewares/authMiddleware.js";
 const router = express.Router();
 
 router.post("/user/follow", verifyToken, followUser);
-router.delete("/user/unfollow", verifyToken, unfollowUser);
+router.post("/user/unfollow", verifyToken, unfollowUser);
 
 router
   .route("/user/:id")

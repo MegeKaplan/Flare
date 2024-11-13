@@ -26,6 +26,7 @@ function App() {
         <Route path="/edit-post/:id" element={<EditPost />} />
         <Route path="/discover" element={<Discover />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/:id" element={<Profile />} />
       </Routes>
       <Nav />
       <ToastContainer {...toastifyContainerConfig} />

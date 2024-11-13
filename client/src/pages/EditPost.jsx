@@ -5,6 +5,7 @@ import { FaFileMedical } from "react-icons/fa6";
 import { AiOutlineClear } from "react-icons/ai";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import Button from "../components/ui/Button";
 
 const EditPost = () => {
   const [images, setImages] = useState([]);
@@ -190,9 +191,7 @@ const EditPost = () => {
           </label>
         </div>
         <div className="w-full p-2">
-          <button className="w-full p-2 outline-none rounded bg-primary-400 hover:bg-primary-500 transition">
-            Güncelle
-          </button>
+          <Button text="Güncelle" color="primary" />
         </div>
       </form>
     </div>
