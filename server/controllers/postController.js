@@ -9,6 +9,7 @@ export const getPosts = async (req, res) => {
     const posts = await db("posts")
       .leftJoin("post_images", "posts.id", "post_images.post_id")
       .leftJoin("post_actions", "posts.id", "post_actions.post_id")
+      .leftJoin("users", "posts.sender_id", "users.id")
       .select(
         "posts.*",
         db.raw("GROUP_CONCAT(DISTINCT post_images.image_url) as images"),
@@ -20,9 +21,19 @@ export const getPosts = async (req, res) => {
         ),
         db.raw(
           "GROUP_CONCAT(DISTINCT CASE WHEN post_actions.action = 'comment' THEN post_actions.user_id END) as comments"
-        )
+        ),
+        "users.username as sender_username",
+        "users.pp_url as sender_pp_url",
+        "users.is_verified as sender_is_verified",
+        "users.is_private as sender_is_private"
       )
-      .where({ is_deleted: false, ...query })
+      .where({
+        "posts.is_deleted": false,
+        "users.is_deleted": false,
+        "users.is_freezed": false,
+        ...query,
+      })
+
       .groupBy("posts.id")
       .orderBy(sortBy ? sortBy : "created_at", sortOrder ? sortOrder : "desc")
       .offset(offset ? offset : 0)
@@ -46,6 +57,7 @@ export const getPost = async (req, res) => {
     const post = await db("posts")
       .leftJoin("post_images", "posts.id", "post_images.post_id")
       .leftJoin("post_actions", "posts.id", "post_actions.post_id")
+      .leftJoin("users", "posts.sender_id", "users.id")
       .select(
         "posts.*",
         db.raw("GROUP_CONCAT(DISTINCT post_images.image_url) as images"),
@@ -57,9 +69,25 @@ export const getPost = async (req, res) => {
         ),
         db.raw(
           "GROUP_CONCAT(DISTINCT CASE WHEN post_actions.action = 'comment' THEN post_actions.user_id END) as comments"
-        )
+        ),
+        // "users.username as sender_username",
+        // "users.pp_url as sender_pp_url",
+        // "users.is_verified as sender_is_verified",
+        // "users.is_private as sender_is_private"
+        db.raw(`JSON_OBJECT(
+        'username', users.username,
+        'pp_url', users.pp_url,
+        'is_verified', users.is_verified,
+        'is_private', users.is_private
+    ) as sender`)
       )
-      .where({ "posts.id": postId, is_deleted: false, ...query })
+      .where({
+        "posts.id": postId,
+        "posts.is_deleted": false,
+        "users.is_deleted": false,
+        "users.is_freezed": false,
+        ...query,
+      })
       .groupBy("posts.id")
       .first();
 

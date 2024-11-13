@@ -1,5 +1,11 @@
 import React from "react";
 
+const COLORS = {
+  primary: "bg-primary-400",
+  secondary: "bg-secondary-400",
+  indigo: "bg-indigo-400",
+};
+
 const Button = ({
   text = "Button",
   color = "primary",
@@ -9,8 +15,9 @@ const Button = ({
   return (
     <button
       className={
-        `w-full p-2 outline-none rounded transition bg-${color}-400 hover:brightness-90` +
-        ` ${className}`
+        `w-full p-2 outline-none rounded transition ${
+          COLORS[color] || COLORS.primary
+        } hover:brightness-90` + ` ${className}`
       }
       {...props}
     >

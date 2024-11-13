@@ -12,6 +12,7 @@ import EditPost from "./pages/EditPost";
 import { ToastContainer } from "react-toastify";
 import { toastifyContainerConfig } from "./config/toastifyConfig";
 import "react-toastify/dist/ReactToastify.css";
+import ViewPost from "./pages/ViewPost";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/discover" element={<Discover />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/:id" element={<Profile />} />
+        <Route path="/post/:id" element={<ViewPost />} />
       </Routes>
       <Nav />
       <ToastContainer {...toastifyContainerConfig} />
