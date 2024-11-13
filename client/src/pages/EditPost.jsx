@@ -199,4 +199,4 @@ const EditPost = () => {
   );
 };
 
-export default NewPost;
+export default EditPost;
