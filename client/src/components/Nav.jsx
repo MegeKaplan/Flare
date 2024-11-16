@@ -7,7 +7,7 @@ import { FaCircleUser, FaCompass } from "react-icons/fa6";
 
 const Nav = () => {
   return (
-    <nav className="w-full flex items-center justify-evenly h-14 fixed bottom-0 left-0 shadow">
+    <nav className="w-full flex items-center justify-evenly h-14 fixed bottom-0 left-0 shadow bg-white">
       <Link
         to={"/"}
         className="h-full aspect-square flex items-center justify-center"

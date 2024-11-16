@@ -5,14 +5,17 @@ import { FaFileMedical } from "react-icons/fa6";
 import { AiOutlineClear } from "react-icons/ai";
 import axios from "axios";
 import Button from "../components/ui/Button";
+import { useNavigate } from "react-router-dom";
 
 const NewPost = () => {
   const [images, setImages] = useState([]);
   const [postData, setPostData] = useState({
     content: "",
     is_story: false,
+    is_public: false,
     sender_id: Number(localStorage.getItem("userId")),
   });
+  const navigate = useNavigate();
 
   const handleImageChange = (e) => {
     if (e.target.files) {
@@ -73,6 +76,7 @@ const NewPost = () => {
           sender_id: Number(localStorage.getItem("userId")),
         });
         toast.success(response.data.message);
+        navigate(`/post/${response.data.response}`);
       }
     } catch (error) {
       toast.error(error.response.data.message);
@@ -134,6 +138,18 @@ const NewPost = () => {
             className="w-full mt-1 p-2 border rounded-md min-h-24 outline-none focus:ring-2 focus:ring-primary-400 mb-1"
             rows={4}
           />
+        </div>
+        <div className="flex items-center mx-2 my-4">
+          <input
+            type="checkbox"
+            name="is_public"
+            checked={postData.is_public}
+            onChange={handleCheckboxChange}
+            className="mr-2"
+          />
+          <label htmlFor="is_public" className="font-semibold">
+            Herkese Açık Olarak Paylaş
+          </label>
         </div>
         <div className="flex items-center mx-2 my-4">
           <input

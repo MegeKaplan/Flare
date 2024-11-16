@@ -32,7 +32,7 @@ const ViewPost = () => {
   if (error) return <h1>{MESSAGES.ERROR_OCCURRED}</h1>;
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex justify-center pb-16 p-2">
       <Post data={postData} />
     </div>
   );

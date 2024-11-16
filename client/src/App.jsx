@@ -13,8 +13,35 @@ import { ToastContainer } from "react-toastify";
 import { toastifyContainerConfig } from "./config/toastifyConfig";
 import "react-toastify/dist/ReactToastify.css";
 import ViewPost from "./pages/ViewPost";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 function App() {
+  const [userData, setUserData] = useState(
+    localStorage.getItem("userData") || null
+  );
+
+  useEffect(() => {
+    const fetchUser = async (userId) => {
+      try {
+        userId &&
+          localStorage.setItem(
+            "userData",
+            JSON.stringify(
+              (
+                await axios.get(
+                  `${import.meta.env.VITE_API_URL}/user/${userId}`
+                )
+              ).data.response
+            )
+          );
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUser(localStorage.getItem("userId"));
+  }, [localStorage.getItem("userId")]);
+
   return (
     <>
       <Header />

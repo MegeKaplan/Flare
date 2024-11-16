@@ -6,16 +6,19 @@ import { AiOutlineClear } from "react-icons/ai";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Button from "../components/ui/Button";
+import { useNavigate } from "react-router-dom";
 
 const EditPost = () => {
   const [images, setImages] = useState([]);
   const [postData, setPostData] = useState({
     content: "",
     is_story: false,
+    is_public: false,
     // sender_id: Number(localStorage.getItem("userId")),
   });
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -26,6 +29,7 @@ const EditPost = () => {
         setPostData({
           content: response.data.response.content,
           is_story: response.data.response.is_story,
+          is_public: response.data.response.is_public,
         });
         setImages(response.data.response.images.split(","));
         setLoading(false);
@@ -102,6 +106,7 @@ const EditPost = () => {
 
       if (response.status === 200) {
         toast.success(response.data.message);
+        navigate(`/post/${id}`);
       } else {
         toast.error(MESSAGES.ERROR_OCCURRED);
       }
@@ -181,6 +186,18 @@ const EditPost = () => {
         <div className="flex items-center mx-2 my-4">
           <input
             type="checkbox"
+            name="is_public"
+            checked={postData.is_public}
+            onChange={handleCheckboxChange}
+            className="mr-2"
+          />
+          <label htmlFor="is_public" className="font-semibold">
+            Herkese Açık Olarak Paylaş
+          </label>
+        </div>
+        <div className="flex items-center mx-2 my-4">
+          <input
+            type="checkbox"
             name="is_story"
             checked={postData.is_story}
             onChange={handleCheckboxChange}
@@ -192,6 +209,34 @@ const EditPost = () => {
         </div>
         <div className="w-full p-2">
           <Button text="Güncelle" color="primary" />
+        </div>
+        <div className="w-full p-2">
+          <Button
+            text="Sil"
+            color="danger"
+            onClick={async () => {
+              try {
+                const response = await axios.delete(
+                  `${import.meta.env.VITE_API_URL}/post/${id}`,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                  }
+                );
+                console.log(response.status);
+
+                if (response.status === 200) {
+                  toast.success(response.data.message);
+                  navigate("/");
+                } else {
+                  toast.error(MESSAGES.ERROR_OCCURRED);
+                }
+              } catch (error) {
+                toast.error(error.response.data.message);
+              }
+            }}
+          />
         </div>
       </form>
     </div>

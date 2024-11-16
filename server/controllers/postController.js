@@ -22,10 +22,16 @@ export const getPosts = async (req, res) => {
         db.raw(
           "GROUP_CONCAT(DISTINCT CASE WHEN post_actions.action = 'comment' THEN post_actions.user_id END) as comments"
         ),
-        "users.username as sender_username",
-        "users.pp_url as sender_pp_url",
-        "users.is_verified as sender_is_verified",
-        "users.is_private as sender_is_private"
+        // "users.username as sender_username",
+        // "users.pp_url as sender_pp_url",
+        // "users.is_verified as sender_is_verified",
+        // "users.is_private as sender_is_private"
+        db.raw(`JSON_OBJECT(
+        'username', users.username,
+        'pp_url', users.pp_url,
+        'is_verified', users.is_verified,
+        'is_private', users.is_private
+    ) as sender`)
       )
       .where({
         "posts.is_deleted": false,
