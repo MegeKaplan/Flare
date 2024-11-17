@@ -37,7 +37,6 @@ const Feed = ({ page }) => {
           setPostsEmpty(true);
           fetchedPosts = [];
         }
-        console.log(fetchedPosts);
       } else {
         fetchedPosts = response.data.response;
       }
@@ -55,8 +54,7 @@ const Feed = ({ page }) => {
       setLoading(false);
       setLoadingMore(false);
     } catch (error) {
-      console.log(error);
-      toast.error(error);
+      toast.error(MESSAGES.ERROR_OCCURRED);
       setLoadingMore(false);
     }
   };

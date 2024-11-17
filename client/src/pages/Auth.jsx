@@ -3,11 +3,12 @@ import { toast } from "react-toastify";
 import { toastifyEmitterConfig } from "../config/toastifyConfig";
 import { MESSAGES } from "../constants/messages";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Button from "../components/ui/Button";
 
 const Auth = () => {
-  const [signUp, setSignUp] = useState(false);
+  const [searchParams] = useSearchParams();
+  const [signUp, setSignUp] = useState(searchParams.get("page") === "register");
   const [authData, setAuthData] = useState({
     username: "",
     email: "",
