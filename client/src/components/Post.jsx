@@ -186,8 +186,8 @@ const Post = ({ data, className }) => {
         </p>
         <div className="aspect-square flex items-center justify-center rounded-xl overflow-hidden my-2 bg-secondary-100 shadow-sm">
           <img
-            src={postData.images.split(",")[0]}
-            alt="image of the post"
+            src={postData.images && postData.images.split(",")[0]}
+            alt="Resim Yükleniyor..."
             className="select-none object-cover size-full hover:object-fill hover:scale-95 transition duration-300 rounded-xl"
           />
         </div>

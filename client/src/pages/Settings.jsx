@@ -21,6 +21,12 @@ const Settings = () => {
         >
           Giriş Yap
         </Link>
+        <Link
+          to={"https://github.com/MegeKaplan/Flare"}
+          className="text-2xl p-3 bg-secondary-100 mt-2 w-full"
+        >
+          Bu Projeye Katkıda Bulun
+        </Link>
       </div>
       <span className="flex items-center justify-center flex-row p-2 bg-white fixed bottom-16 w-full select-none">
         Made with
