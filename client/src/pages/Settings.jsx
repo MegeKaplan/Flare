@@ -22,6 +22,15 @@ const Settings = () => {
           Giriş Yap
         </Link>
         <Link
+          to={"/auth?page=login"}
+          className="text-2xl p-3 bg-secondary-100 mt-2 w-full"
+          onClick={() => {
+            localStorage.clear();
+          }}
+        >
+          Çıkış Yap
+        </Link>
+        <Link
           to={"https://github.com/MegeKaplan/Flare"}
           className="text-2xl p-3 bg-secondary-100 mt-2 w-full"
         >
