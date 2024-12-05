@@ -21,7 +21,7 @@ const Feed = ({ page }) => {
       const response = await axios.get(
         `${
           import.meta.env.VITE_API_URL
-        }/posts?offset=${newOffset}&limit=${limit}`
+        }/posts?offset=${newOffset}&limit=${limit}&is_story=0`
       );
 
       var fetchedPosts = response.data.response;

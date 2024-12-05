@@ -47,7 +47,7 @@ const Profile = () => {
     const getPostsOfUser = async () => {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_API_URL}/posts?sender_id=${id}`
+          `${import.meta.env.VITE_API_URL}/posts?sender_id=${id}&is_story=0`
         );
         setPosts(response.data.response);
       } catch (error) {
