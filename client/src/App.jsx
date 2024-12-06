@@ -16,6 +16,7 @@ import ViewPost from "./pages/ViewPost";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import EditProfile from "./pages/EditProfile";
+import NotFound from "./pages/NotFound";
 
 function App() {
   const [userData, setUserData] = useState(
@@ -47,6 +48,7 @@ function App() {
     <>
       <Header />
       <Routes>
+        <Route path="*" element={<NotFound />} />
         <Route path="/" element={<Home />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/settings" element={<Settings />} />
