@@ -15,6 +15,7 @@ import "react-toastify/dist/ReactToastify.css";
 import ViewPost from "./pages/ViewPost";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import EditProfile from "./pages/EditProfile";
 
 function App() {
   const [userData, setUserData] = useState(
@@ -55,6 +56,7 @@ function App() {
         <Route path="/discover" element={<Discover />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/:id" element={<Profile />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/post/:id" element={<ViewPost />} />
       </Routes>
       <Nav />

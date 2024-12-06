@@ -7,6 +7,7 @@ import axios from "axios";
 import defaultBanner from "../assets/images/default-banner.jpg";
 import defaultProfilePicture from "../assets/images/default-profile-picture.webp";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [userData, setUserData] = useState();
@@ -17,6 +18,7 @@ const Profile = () => {
   const isMyProfile = id === localStorage.getItem("userId") || !id;
   const [posts, setPosts] = useState([]);
   const [refresh, setRefresh] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -108,7 +110,7 @@ const Profile = () => {
       <div className="relative mb-14 select-none">
         <div className="h-48">
           <img
-            src={userData.bannerUrl || defaultBanner}
+            src={userData.banner_url || defaultBanner}
             alt="banner"
             className="w-full h-full object-cover"
           />
@@ -159,7 +161,7 @@ const Profile = () => {
                 text="Düzenle"
                 color="primary"
                 onClick={() => {
-                  toast.warning("Bu özellik henüz aktif değil!");
+                  navigate(`/edit-profile`);
                 }}
               />
             </>
