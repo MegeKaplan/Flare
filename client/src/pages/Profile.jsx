@@ -8,6 +8,7 @@ import defaultBanner from "../assets/images/default-banner.jpg";
 import defaultProfilePicture from "../assets/images/default-profile-picture.webp";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import RestrictedPageMessage from "../components/RestrictedPageMessage";
 
 const Profile = () => {
   const [userData, setUserData] = useState();
@@ -38,7 +39,6 @@ const Profile = () => {
           setRefresh(false);
         }, 100);
       } catch (error) {
-        toast.error(MESSAGES.ERROR_OCCURRED);
         setError(true);
       }
     };
@@ -101,9 +101,9 @@ const Profile = () => {
     }
   };
 
-  if (loading) return <h1>{MESSAGES.CONTENT_LOADING}</h1>;
-
-  if (error) return <h1>{MESSAGES.ERROR_OCCURRED}</h1>;
+  if (!localStorage.getItem("userId")) return <RestrictedPageMessage />;
+  else if (loading) return <h1>{MESSAGES.CONTENT_LOADING}</h1>;
+  else if (error) return <h1>{MESSAGES.ERROR_OCCURRED}</h1>;
 
   return (
     <div className="m-2 rounded-lg overflow-hidden pb-16">

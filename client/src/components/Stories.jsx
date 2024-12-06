@@ -21,10 +21,11 @@ const Stories = () => {
           `${import.meta.env.VITE_API_URL}/posts?is_story=1`
         );
 
-        const userFollowing =
-          JSON.parse(localStorage.getItem("userData")).followings +
-          "," +
-          JSON.parse(localStorage.getItem("userData")).id;
+        const userFollowing = localStorage.getItem("userData")
+          ? JSON.parse(localStorage.getItem("userData")).followings +
+            "," +
+            JSON.parse(localStorage.getItem("userData")).id
+          : "";
 
         var fetchedStories = response.data.response
           .filter((story) => {
@@ -50,7 +51,7 @@ const Stories = () => {
 
   return (
     <div
-      className="w-full bg-secondary-50 shadow-inner h-auto py-2 flex items-center justify-start overflow-x-scroll scroll-smooth scrollbar-hide"
+      className="w-full select-none bg-secondary-50 shadow-inner h-auto py-2 flex items-center justify-start overflow-x-scroll scroll-smooth scrollbar-hide"
       onWheel={handleScroll}
       ref={scrollRef}
       style={{

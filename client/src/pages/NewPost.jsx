@@ -6,6 +6,7 @@ import { AiOutlineClear } from "react-icons/ai";
 import axios from "axios";
 import Button from "../components/ui/Button";
 import { useNavigate } from "react-router-dom";
+import RestrictedPageMessage from "../components/RestrictedPageMessage";
 
 const NewPost = () => {
   const [images, setImages] = useState([]);
@@ -82,6 +83,8 @@ const NewPost = () => {
       toast.error(error.response.data.message);
     }
   };
+
+  if (!localStorage.getItem("userId")) return <RestrictedPageMessage />;
 
   return (
     <div className="w-full h-auto flex items-center justify-center">

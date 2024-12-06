@@ -5,7 +5,10 @@ import { Link } from "react-router-dom";
 const Header = () => {
   return (
     <header className="w-full h-14 flex items-center justify-between px-4 shadow-sm">
-      <Link to={"/"} className="font-black text-3xl text-primary-500">
+      <Link
+        to={"/"}
+        className="font-black text-3xl text-primary-500 select-none"
+      >
         Flare
       </Link>
       <Link to={"/settings"}>

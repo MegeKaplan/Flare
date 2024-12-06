@@ -1,12 +1,19 @@
 import React from "react";
 import Feed from "../components/Feed";
 import Stories from "../components/Stories";
+import RestrictedPageMessage from "../components/RestrictedPageMessage";
 
 const Home = () => {
   return (
     <>
-      <Stories />
-      <Feed page="home" />
+      {localStorage.getItem("userId") ? (
+        <>
+          <Stories />
+          <Feed page="home" />
+        </>
+      ) : (
+        <RestrictedPageMessage />
+      )}
     </>
   );
 };
