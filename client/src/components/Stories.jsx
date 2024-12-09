@@ -75,7 +75,7 @@ const Stories = () => {
             className="flex items-center justify-center border-primary-400 border-[3px] rounded-2xl p-[2px] mx-1 size-16 whitespace-nowrap"
           >
             <img
-              src={story.images.split(",")[0]}
+              src={story.images ? story.images.split(",")[0] : ""}
               alt="story"
               className="size-14 rounded-xl"
             />
