@@ -25,7 +25,7 @@ const Post = ({ data, className }) => {
   const [refreshPostData, setRefreshPostData] = useState(false);
   const navigate = useNavigate();
   const [postMenuOpen, setPostMenuOpen] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [isCommentsDrawerOpen, setIsCommentsDrawerOpen] = useState(false);
 
   // setTimeout(() => {
   //   setDate(new Date(postData.created_at));
@@ -84,6 +84,22 @@ const Post = ({ data, className }) => {
       setRefreshPostData(true);
     } catch (error) {
       toast.error(error.response.data.message);
+    }
+  };
+
+  const handleShare = async () => {
+    const textToCopy = `${window.location.origin}/post/${postData.id}`;
+    try {
+      navigator.clipboard
+        .writeText(textToCopy)
+        .then(() => {
+          toast.info(MESSAGES.LINK_COPIED_TO_CLIPBOARD);
+        })
+        .catch((err) => {
+          toast.error(MESSAGES.ERROR_OCCURRED);
+        });
+    } catch (error) {
+      toast.error(MESSAGES.ERROR_OCCURRED);
     }
   };
 
@@ -221,7 +237,7 @@ const Post = ({ data, className }) => {
                         .includes(localStorage.getItem("userId")) && "green"
                     : undefined
                 }
-                onClick={() => setDrawerOpen(true)}
+                onClick={() => setIsCommentsDrawerOpen(true)}
               />
               <span className="ml-2 text-xl font-bold select-none">
                 {postData.comments ? postData.comments.split(",").length : 0}
@@ -247,7 +263,11 @@ const Post = ({ data, className }) => {
           </div>
           <div className="h-full flex items-center justify-center flex-row">
             <div className="flex items-center justify-center flex-row h-full p-2 text-secondary-700">
-              <FaShare size={25} className="ml-2 cursor-pointer" />
+              <FaShare
+                size={25}
+                className="ml-2 cursor-pointer"
+                onClick={handleShare}
+              />
               {/* <span className="ml-2 text-xl font-bold select-none">
               {postData.shares ? postData.shares.split(",").length : 0}
             </span> */}
@@ -255,12 +275,12 @@ const Post = ({ data, className }) => {
           </div>
         </div>
       </div>
-      {drawerOpen && (
+      {isCommentsDrawerOpen && (
         <div className="w-full h-4/5 fixed bg-secondary-100 left-0 bottom-0 rounded-t-2xl z-30">
           <div className="w-full h-14 flex items-center justify-center">
             <span
               className="bg-secondary-150 p-2 rounded-full cursor-pointer"
-              onClick={() => setDrawerOpen(false)}
+              onClick={() => setIsCommentsDrawerOpen(false)}
             >
               Yorumları Kapat
             </span>
