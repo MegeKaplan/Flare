@@ -17,6 +17,7 @@ const NewPost = () => {
     sender_id: Number(localStorage.getItem("userId")),
   });
   const navigate = useNavigate();
+  const [isClickedTheShareButton, setIsClickedTheShareButton] = useState(false);
 
   const handleImageChange = (e) => {
     if (e.target.files) {
@@ -43,10 +44,12 @@ const NewPost = () => {
       toast.error(MESSAGES.IMAGE_REQUIRED);
       return;
     }
-    if (!postData.content.trim()) {
-      toast.error(MESSAGES.POST_CONTENT_REQUIRED);
-      return;
-    }
+    // if (!postData.content.trim()) {
+    //   toast.error(MESSAGES.POST_CONTENT_REQUIRED);
+    //   return;
+    // }
+
+    setIsClickedTheShareButton(true);
 
     try {
       const response = await axios.post(
@@ -138,7 +141,7 @@ const NewPost = () => {
             name="content"
             value={postData.content}
             onChange={handleInputChange}
-            className="w-full mt-1 p-2 border rounded-md min-h-24 outline-none focus:ring-2 focus:ring-primary-400 mb-1"
+            className="w-full mt-1 p-2 border rounded-md min-h-24 outline-none focus:ring-2 focus:ring-primary-400 mb-1 bg-secondary-50"
             rows={4}
           />
         </div>
@@ -146,9 +149,10 @@ const NewPost = () => {
           <input
             type="checkbox"
             name="is_public"
+            id="is_public"
             checked={postData.is_public}
             onChange={handleCheckboxChange}
-            className="mr-2"
+            className="appearance-none w-6 h-6 border border-secondary-300 rounded-md bg-secondary-50 checked:bg-primary-400 checked:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-1 hover:outline-none hover:ring-2 hover:ring-primary-400 mr-2"
           />
           <label htmlFor="is_public" className="font-semibold">
             Herkese Açık Olarak Paylaş
@@ -158,17 +162,26 @@ const NewPost = () => {
           <input
             type="checkbox"
             name="is_story"
+            id="is_story"
             checked={postData.is_story}
             onChange={handleCheckboxChange}
-            className="mr-2"
+            className="appearance-none w-6 h-6 border border-secondary-300 rounded-md bg-secondary-50 checked:bg-primary-400 checked:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-1 hover:outline-none hover:ring-2 hover:ring-primary-400 mr-2"
           />
           <label htmlFor="is_story" className="font-semibold">
             Story Olarak Paylaş
           </label>
         </div>
-        <div className="w-full p-2">
-          <Button text="Paylaş" color="primary" />
-        </div>
+        {!isClickedTheShareButton ? (
+          <div className="w-full p-2">
+            <Button text="Paylaş" color="primary" />
+          </div>
+        ) : (
+          <div className="w-full p-2">
+            <div className="bg-secondary-300 p-2 rounded-lg flex items-center justify-center">
+              Paylaşılıyor...
+            </div>
+          </div>
+        )}
       </form>
     </div>
   );

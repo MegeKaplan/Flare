@@ -208,7 +208,7 @@ const Profile = () => {
               className="col-span-1 border-primary-400 border-2 aspect-square flex items-center justify-center rounded-md overflow-hidden shadow-sm hover:scale-95 transition duration-300"
             >
               <img
-                src={post.images.split(",")[0]}
+                src={post.images ? post.images.split(",")[0] : ""}
                 alt={post.content}
                 title={post.content}
                 className="select-none object-cover size-full transition duration-300 filter hover:brightness-75"

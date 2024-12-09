@@ -31,7 +31,11 @@ const EditPost = () => {
           is_story: response.data.response.is_story,
           is_public: response.data.response.is_public,
         });
-        setImages(response.data.response.images.split(","));
+        setImages(
+          response.data.response.images
+            ? response.data.response.images.split(",")
+            : []
+        );
         setLoading(false);
       } catch (error) {
         // toast.error(error.response.data.message);
@@ -179,7 +183,7 @@ const EditPost = () => {
             name="content"
             value={postData.content}
             onChange={handleInputChange}
-            className="w-full mt-1 p-2 border rounded-md min-h-24 outline-none focus:ring-2 focus:ring-primary-400 mb-1"
+            className="w-full mt-1 p-2 border rounded-md min-h-24 outline-none focus:ring-2 focus:ring-primary-400 mb-1 bg-secondary-50"
             rows={4}
           />
         </div>
@@ -187,9 +191,10 @@ const EditPost = () => {
           <input
             type="checkbox"
             name="is_public"
+            id="is_public"
             checked={postData.is_public}
             onChange={handleCheckboxChange}
-            className="mr-2"
+            className="appearance-none w-6 h-6 border border-secondary-300 rounded-md bg-secondary-50 checked:bg-primary-400 checked:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-1 hover:outline-none hover:ring-2 hover:ring-primary-400 mr-2"
           />
           <label htmlFor="is_public" className="font-semibold">
             Herkese Açık Olarak Paylaş
@@ -199,9 +204,10 @@ const EditPost = () => {
           <input
             type="checkbox"
             name="is_story"
+            id="is_story"
             checked={postData.is_story}
             onChange={handleCheckboxChange}
-            className="mr-2"
+            className="appearance-none w-6 h-6 border border-secondary-300 rounded-md bg-secondary-50 checked:bg-primary-400 checked:border-primary-300 focus:outline-none focus:ring-2 focus:ring-primary-400 focus:ring-offset-1 hover:outline-none hover:ring-2 hover:ring-primary-400 mr-2"
           />
           <label htmlFor="is_story" className="font-semibold">
             Story Olarak Ayarla
