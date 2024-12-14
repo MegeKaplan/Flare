@@ -1,6 +1,5 @@
 import db from "../config/db/db_conn.js";
 import MESSAGES from "../constants/messages.js";
-import bcrypt from "bcryptjs";
 
 export const getPosts = async (req, res) => {
   try {
@@ -10,6 +9,7 @@ export const getPosts = async (req, res) => {
       .leftJoin("post_images", "posts.id", "post_images.post_id")
       .leftJoin("post_actions", "posts.id", "post_actions.post_id")
       .leftJoin("users", "posts.sender_id", "users.id")
+      .leftJoin("post_comments", "posts.id", "post_comments.post_id")
       .select(
         "posts.*",
         db.raw("GROUP_CONCAT(DISTINCT post_images.image_url) as images"),
@@ -19,9 +19,11 @@ export const getPosts = async (req, res) => {
         db.raw(
           "GROUP_CONCAT(DISTINCT CASE WHEN post_actions.action = 'save' THEN post_actions.user_id END) as saves"
         ),
-        db.raw(
-          "GROUP_CONCAT(DISTINCT CASE WHEN post_actions.action = 'comment' THEN post_actions.user_id END) as comments"
-        ),
+        // db.raw(
+        //   "GROUP_CONCAT(DISTINCT JSON_OBJECT('user_id', post_comments.user_id, 'content', post_comments.comment)) as comments"
+        // ),
+        db.raw("GROUP_CONCAT(DISTINCT post_comments.id) as comments"),
+
         // "users.username as sender_username",
         // "users.pp_url as sender_pp_url",
         // "users.is_verified as sender_is_verified",
@@ -64,6 +66,7 @@ export const getPost = async (req, res) => {
       .leftJoin("post_images", "posts.id", "post_images.post_id")
       .leftJoin("post_actions", "posts.id", "post_actions.post_id")
       .leftJoin("users", "posts.sender_id", "users.id")
+      .leftJoin("post_comments", "posts.id", "post_comments.post_id")
       .select(
         "posts.*",
         db.raw("GROUP_CONCAT(DISTINCT post_images.image_url) as images"),
@@ -73,9 +76,10 @@ export const getPost = async (req, res) => {
         db.raw(
           "GROUP_CONCAT(DISTINCT CASE WHEN post_actions.action = 'save' THEN post_actions.user_id END) as saves"
         ),
-        db.raw(
-          "GROUP_CONCAT(DISTINCT CASE WHEN post_actions.action = 'comment' THEN post_actions.user_id END) as comments"
-        ),
+        // db.raw(
+        //   "GROUP_CONCAT(DISTINCT JSON_OBJECT('user_id', post_comments.user_id, 'content', post_comments.comment)) as comments"
+        // ),
+        db.raw("GROUP_CONCAT(DISTINCT post_comments.id) as comments"),
         // "users.username as sender_username",
         // "users.pp_url as sender_pp_url",
         // "users.is_verified as sender_is_verified",
@@ -187,9 +191,9 @@ export const deletePost = async (req, res) => {
 
 export const postActions = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const { userId, comment } = req.body;
     const postId = req.params.id;
-    const { action } = req.query;
+    const { action, operation } = req.query;
 
     const actionTypes = ["like", "save", "comment"];
 
@@ -209,7 +213,7 @@ export const postActions = async (req, res) => {
     //   return res.status(400).json({ message: MESSAGES.ACTION_ALREADY_EXIST });
     // }
 
-    if (existingAction) {
+    if (existingAction && action != "comment") {
       await db("post_actions")
         .where({ user_id: userId, post_id: postId, action })
         .del();
@@ -218,11 +222,45 @@ export const postActions = async (req, res) => {
         .json({ message: MESSAGES.ACTION_SUCCESS("un" + action) });
     }
 
-    await db("post_actions").insert({
-      user_id: userId,
-      post_id: postId,
-      action,
-    });
+    if (action == "comment") {
+      if (operation == "get") {
+        const comments = await db("post_comments")
+          .join("users", "post_comments.user_id", "users.id")
+          .select("post_comments.*", "users.username", "users.pp_url")
+          .where({ "post_comments.post_id": postId })
+          .orderBy("post_comments.created_at", "desc");
+
+        return res.status(200).json({
+          message: MESSAGES.COMMENTS_FETCH_SUCCESS,
+          response: comments,
+        });
+      }
+      if (!comment.trim()) {
+        return res.status(400).json({ message: MESSAGES.COMMENT_IS_REQUIRED });
+      }
+      if (operation == "add") {
+        await db("post_comments").insert({
+          user_id: userId,
+          post_id: postId,
+          comment,
+        });
+      }
+      if (operation == "delete" || operation == "del") {
+        await db("post_comments")
+          // .where({ user_id: userId, post_id: postId, comment })
+          .where({ id: req.body.commentId, is_deleted: false })
+          .update({ is_deleted: true });
+        return res
+          .status(200)
+          .json({ message: MESSAGES.COMMENT_DELETE_SUCCESS });
+      }
+    } else {
+      await db("post_actions").insert({
+        user_id: userId,
+        post_id: postId,
+        action,
+      });
+    }
 
     res.status(200).json({ message: MESSAGES.ACTION_SUCCESS(action) });
   } catch (error) {

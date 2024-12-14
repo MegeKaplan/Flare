@@ -4,12 +4,15 @@ import { FaComment } from "react-icons/fa6";
 import { FaShare } from "react-icons/fa6";
 import { FaBookmark } from "react-icons/fa6";
 import { FaEllipsis } from "react-icons/fa6";
+import { FaPaperPlane } from "react-icons/fa6";
 import defaultProfilePicture from "../assets/images/default-profile-picture.webp";
 import { toast } from "react-toastify";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { MESSAGES } from "../constants/messages";
 import { Link } from "react-router-dom";
+import CommentItem from "./CommentItem";
+import Button from "./ui/Button";
 
 const Post = ({ data, className }) => {
   if (data === undefined) {
@@ -26,6 +29,8 @@ const Post = ({ data, className }) => {
   const navigate = useNavigate();
   const [postMenuOpen, setPostMenuOpen] = useState(false);
   const [isCommentsDrawerOpen, setIsCommentsDrawerOpen] = useState(false);
+  const [comments, setComments] = useState([]);
+  const [newComment, setNewComment] = useState("");
 
   // setTimeout(() => {
   //   setDate(new Date(postData.created_at));
@@ -103,6 +108,38 @@ const Post = ({ data, className }) => {
     }
   };
 
+  const handleCommentChange = (e) => {
+    setNewComment(e.target.value);
+  };
+
+  const handleCommentSubmit = async (e) => {
+    e.preventDefault();
+    setRefreshPostData(true);
+    if (!newComment.trim()) {
+      toast.warning(MESSAGES.POST_CONTENT_REQUIRED);
+      return false;
+    }
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/post/${
+          postData.id
+        }?action=comment&operation=add`,
+        { userId: localStorage.getItem("userId"), comment: newComment },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setNewComment("");
+      toast.success(response.data.response.message);
+    } catch (error) {
+      // toast.error(error.response.data.message);
+    } finally {
+      setRefreshPostData(false);
+    }
+  };
+
   useEffect(() => {
     if (refreshPostData) {
       const fetchPost = async () => {
@@ -124,6 +161,31 @@ const Post = ({ data, className }) => {
       fetchPost();
     }
   }, [refreshPostData, postData.id]);
+
+  const getComments = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/post/${
+          postData.id
+        }?action=comment&operation=get`,
+        { userId: localStorage.getItem("userId") },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      setComments(response.data.response);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+
+  useEffect(() => {
+    if (isCommentsDrawerOpen) {
+      getComments();
+    }
+  }, [isCommentsDrawerOpen, refreshPostData]);
 
   return (
     <>
@@ -231,10 +293,13 @@ const Post = ({ data, className }) => {
                 size={25}
                 className="ml-2 cursor-pointer"
                 color={
-                  postData.comments
-                    ? postData.comments
-                        .split(",")
-                        .includes(localStorage.getItem("userId")) && "green"
+                  comments
+                    .map((comment) => comment.user_id)
+                    .includes(Number(localStorage.getItem("userId")))
+                    ? comments
+                        .map((comment) => comment.user_id)
+                        .includes(Number(localStorage.getItem("userId"))) &&
+                      "green"
                     : undefined
                 }
                 onClick={() => setIsCommentsDrawerOpen(true)}
@@ -276,8 +341,8 @@ const Post = ({ data, className }) => {
         </div>
       </div>
       {isCommentsDrawerOpen && (
-        <div className="w-full h-4/5 fixed bg-secondary-100 left-0 bottom-0 rounded-t-2xl z-30">
-          <div className="w-full h-14 flex items-center justify-center">
+        <div className="w-full h-4/5 fixed bg-secondary-100 left-0 bottom-0 rounded-t-2xl z-30 overflow-y-scroll pb-20">
+          <div className="w-full h-14 flex items-center justify-center sticky top-0 bg-secondary-100">
             <span
               className="bg-secondary-150 p-2 rounded-full cursor-pointer"
               onClick={() => setIsCommentsDrawerOpen(false)}
@@ -285,8 +350,38 @@ const Post = ({ data, className }) => {
               Yorumları Kapat
             </span>
           </div>
-          <div className="w-full min-h-full h-auto flex items-center justify-center">
-            Yorumlar şu anda gösterilemiyor...
+          <div className="w-full min-h-full h-auto flex items-center justify-start flex-col px-2">
+            {comments.length > 0 ? (
+              comments.map((comment) => (
+                <CommentItem key={comment.id} data={comment} />
+              ))
+            ) : (
+              <h1>Bu gönderiye hiç yorum yapılmamış...</h1>
+            )}
+          </div>
+          <div className="fixed bottom-0 left-0 w-full h-20 p-2 bg-secondary-50">
+            <form
+              className="flex items-center justify-center flex-row h-full w-full"
+              onSubmit={handleCommentSubmit}
+            >
+              <textarea
+                name="content"
+                value={newComment}
+                onChange={handleCommentChange}
+                className="w-full mt-1 p-2 border rounded-md min-h-full outline-none focus:ring-2 focus:ring-primary-400 mb-1 bg-secondary-50 text-sm resize-none rounded-tr-none rounded-br-none"
+                rows={1}
+              />
+              <Button
+                text={
+                  <FaPaperPlane
+                    size={50}
+                    className="p-3 bg-secondary-50 text-primary-400 rounded-md"
+                  />
+                }
+                color="primary"
+                className="w-24 h-full rounded-tl-none rounded-bl-none flex items-center justify-center"
+              />
+            </form>
           </div>
         </div>
       )}
