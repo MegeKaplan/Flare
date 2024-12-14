@@ -379,7 +379,7 @@ const Post = ({ data, className }) => {
                   />
                 }
                 color="primary"
-                className="w-24 h-full rounded-tl-none rounded-bl-none flex items-center justify-center"
+                className="w-20 h-full rounded-tl-none rounded-bl-none flex items-center justify-center"
               />
             </form>
           </div>
