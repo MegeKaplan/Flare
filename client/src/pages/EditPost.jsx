@@ -70,10 +70,10 @@ const EditPost = () => {
       toast.error(MESSAGES.IMAGE_REQUIRED);
       return;
     }
-    if (!postData.content.trim()) {
-      toast.error(MESSAGES.POST_CONTENT_REQUIRED);
-      return;
-    }
+    // if (!postData.content.trim()) {
+    //   toast.error(MESSAGES.POST_CONTENT_REQUIRED);
+    //   return;
+    // }
 
     try {
       const response = await axios.put(
@@ -130,19 +130,43 @@ const EditPost = () => {
         <div className="w-auto p-2 flex items-center justify-center overflow-x-auto">
           {images.map((image, index) =>
             typeof image === "string" ? (
-              <img
-                key={index}
-                src={image}
-                alt={`Selected image ${index + 1}`}
-                className="size-28 object-cover rounded-md m-1 border-2 border-primary-300 p-1"
-                title={image.name}
-              />
+              ["jpg", "jpeg", "png", "gif", "webp"].includes(
+                image.match(/\.([a-zA-Z0-9]+)(?=\?|$)/)[1]
+              ) ? (
+                <img
+                  key={index}
+                  src={image}
+                  alt={`Selected image ${index + 1}`}
+                  className="size-28 object-cover rounded-md m-1 border-2 border-primary-300"
+                  title={image.name}
+                />
+              ) : (
+                <video
+                  loop
+                  autoPlay
+                  className="size-28 object-cover rounded-md m-1 border-2 border-primary-300"
+                >
+                  <source src={image} alt={`Selected video ${index + 1}`} />
+                </video>
+              )
+            ) : image.type.includes("video") ? (
+              <video
+                loop
+                autoPlay
+                className="size-28 object-cover rounded-md m-1 border-2 border-primary-300"
+              >
+                <source
+                  src={URL.createObjectURL(image)}
+                  alt="Video Yükleniyor..."
+                />
+                Your browser does not support the video tag.
+              </video>
             ) : (
               <img
                 key={index}
                 src={URL.createObjectURL(image)}
                 alt={`Selected image ${index + 1}`}
-                className="size-28 object-cover rounded-md m-1 border-2 border-primary-300 p-1"
+                className="size-28 object-cover rounded-md m-1 border-2 border-primary-300"
                 title={image.name}
               />
             )
@@ -154,13 +178,13 @@ const EditPost = () => {
               type="file"
               name="images"
               multiple
-              accept="image/*"
+              accept="image/*,video/*"
               onChange={handleImageChange}
               className="w-full h-full cursor-pointer opacity-0 z-10"
             />
             <div className="text-lg font-semibold text-secondary-500 absolute flex items-center justify-center flex-row cursor-pointer">
               <FaFileMedical size={25} />
-              <span className="text-xl ml-1 mt-1">Resim Seç</span>
+              <span className="text-xl ml-1 mt-1">Dosya Seç</span>
             </div>
           </div>
         ) : (

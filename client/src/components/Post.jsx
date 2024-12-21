@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaHeart } from "react-icons/fa6";
 import { FaComment } from "react-icons/fa6";
 import { FaShare } from "react-icons/fa6";
@@ -31,6 +31,8 @@ const Post = ({ data, className }) => {
   const [isCommentsDrawerOpen, setIsCommentsDrawerOpen] = useState(false);
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
+  const [isVideoVisible, setIsVideoVisible] = useState(false);
+  const videoRef = useRef(null);
 
   // setTimeout(() => {
   //   setDate(new Date(postData.created_at));
@@ -187,6 +189,34 @@ const Post = ({ data, className }) => {
     }
   }, [isCommentsDrawerOpen, refreshPostData]);
 
+  useEffect(() => {
+    if (!videoRef.current) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVideoVisible(true);
+          videoRef.current.play();
+        } else {
+          setIsVideoVisible(false);
+          videoRef.current.pause();
+        }
+      },
+      {
+        root: null,
+        threshold: 0.9,
+      }
+    );
+
+    observer.observe(videoRef.current);
+
+    return () => {
+      if (videoRef.current) {
+        observer.unobserve(videoRef.current);
+      }
+    };
+  }, [videoRef]);
+
   return (
     <>
       <div
@@ -263,11 +293,29 @@ const Post = ({ data, className }) => {
           {postData.content}
         </p>
         <div className="aspect-square flex items-center justify-center rounded-xl overflow-hidden my-2 bg-secondary-100 shadow-sm">
-          <img
-            src={postData.images && postData.images.split(",")[0]}
-            alt="Resim Yükleniyor..."
-            className="select-none object-cover size-full hover:object-fill hover:scale-95 transition duration-300 rounded-xl"
-          />
+          {postData.images &&
+          ["jpg", "jpeg", "png", "gif", "webp"].includes(
+            postData.images.split(",")[0].match(/\.([a-zA-Z0-9]+)(?=\?|$)/)[1]
+          ) ? (
+            <img
+              src={postData.images && postData.images.split(",")[0]}
+              alt="Resim Yükleniyor..."
+              className="select-none object-cover size-full hover:object-fill hover:scale-95 transition duration-300 rounded-xl"
+            />
+          ) : (
+            <video
+              ref={videoRef}
+              loop
+              autoPlay={isVideoVisible}
+              className="select-none object-cover size-full hover:object-fill hover:scale-95 transition duration-300 rounded-xl"
+            >
+              <source
+                src={postData.images && postData.images.split(",")[0]}
+                alt="Video Yükleniyor..."
+              />
+              Your browser does not support the video tag.
+            </video>
+          )}
         </div>
         <div className="h-14 flex items-center justify-between">
           <div className="h-full flex items-center justify-center flex-row">

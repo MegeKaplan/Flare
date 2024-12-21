@@ -96,15 +96,29 @@ const NewPost = () => {
         className="w-11/12 h-auto bg-secondary-100 p-2 mt-4 rounded-lg border max-h-[75vh] overflow-y-scroll"
       >
         <div className="w-auto p-2 flex items-center justify-center overflow-x-auto">
-          {images.map((image, index) => (
-            <img
-              key={index}
-              src={URL.createObjectURL(image)}
-              alt={`Selected image ${index + 1}`}
-              className="size-28 object-cover rounded-md m-1 border-2 border-primary-300 p-1"
-              title={image.name}
-            />
-          ))}
+          {images.map((image, index) =>
+            image.type.includes("video") ? (
+              <video
+                loop
+                autoPlay
+                className="size-28 object-cover rounded-md m-1 border-2 border-primary-300"
+              >
+                <source
+                  src={URL.createObjectURL(image)}
+                  alt="Video Yükleniyor..."
+                />
+                Your browser does not support the video tag.
+              </video>
+            ) : (
+              <img
+                key={index}
+                src={URL.createObjectURL(image)}
+                alt={`Selected image ${index + 1}`}
+                className="size-28 object-cover rounded-md m-1 border-2 border-primary-300"
+                title={image.name}
+              />
+            )
+          )}
         </div>
         {images.length === 0 ? (
           <div className="h-48 m-4 bg-secondary-50 border-dashed border-secondary-300 border-2 rounded-2xl flex items-center justify-center hover:border-primary-400 hover:bg-primary-50 relative transition cursor-pointer">
@@ -112,13 +126,13 @@ const NewPost = () => {
               type="file"
               name="images"
               multiple
-              accept="image/*"
+              accept="image/*,video/*"
               onChange={handleImageChange}
               className="w-full h-full cursor-pointer opacity-0 z-10"
             />
             <div className="text-lg font-semibold text-secondary-500 absolute flex items-center justify-center flex-row cursor-pointer">
               <FaFileMedical size={25} />
-              <span className="text-xl ml-1 mt-1">Resim Seç</span>
+              <span className="text-xl ml-1 mt-1">Dosya Seç</span>
             </div>
           </div>
         ) : (
