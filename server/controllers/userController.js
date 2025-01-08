@@ -195,3 +195,61 @@ export const unfollowUser = async (req, res) => {
       .json({ message: MESSAGES.ERROR_OCCURRED, error: error.message });
   }
 };
+
+export const getUserInteractions = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const query = req.query;
+
+    var userInteractions = [];
+    if (query.action != "comment") {
+      userInteractions = await db("post_actions")
+        .select("*")
+        .where({ user_id: userId, ...query })
+        .orderBy("post_id", "desc");
+    } else {
+      var userInteractions = await db("post_comments")
+        .select("*")
+        .where({ user_id: userId })
+        .orderBy("created_at", "desc");
+    }
+
+    res.status(200).json({
+      message: MESSAGES.FETCH_SUCCESS,
+      response: userInteractions,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: MESSAGES.ERROR_OCCURRED, error: error.message });
+  }
+};
+
+export const getUserConnections = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const query = req.query;
+
+    var userConnections = [];
+    if (query.type == "followers") {
+      userConnections = await db("user_followers")
+        .join("users", "users.id", "user_followers.follower_id")
+        .where({ "user_followers.following_id": userId })
+        .select("users.*");
+    } else if (query.type == "following") {
+      userConnections = await db("user_followers")
+        .join("users", "users.id", "user_followers.following_id")
+        .where({ "user_followers.follower_id": userId })
+        .select("users.*");
+    }
+
+    res.status(200).json({
+      message: MESSAGES.FETCH_SUCCESS,
+      response: userConnections,
+    });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: MESSAGES.ERROR_OCCURRED, error: error.message });
+  }
+};

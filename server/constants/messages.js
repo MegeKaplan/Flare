@@ -29,6 +29,7 @@ export default {
   FILES_UPLOAD_SUCCESS: "Dosyalar başarıyla yüklendi.",
   FILE_DELETE_SUCCESS: "Dosya başarıyla silindi.",
   FILES_DELETE_SUCCESS: "Dosyalar başarıyla silindi.",
+  FETCH_SUCCESS: "Veriler başarıyla getirildi.",
   MISSING_PARAMETERS: "Gerekli parametreler eksik veya hatalı!",
   NO_TOKEN_PROVIDED: "Token bulunamadı!",
   INVALID_TOKEN: "Token doğrulanamadı!",
