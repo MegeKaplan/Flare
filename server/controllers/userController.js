@@ -204,13 +204,25 @@ export const getUserInteractions = async (req, res) => {
     var userInteractions = [];
     if (query.action != "comment") {
       userInteractions = await db("post_actions")
-        .select("*")
-        .where({ user_id: userId, ...query })
+        .join("posts", "posts.id", "post_actions.post_id")
+        .where({
+          user_id: userId,
+          is_deleted: false,
+          is_story: false,
+          ...query,
+        })
+        .select("posts.*")
         .orderBy("post_id", "desc");
     } else {
       var userInteractions = await db("post_comments")
-        .select("*")
-        .where({ user_id: userId })
+        .join("posts", "posts.id", "post_comments.post_id")
+        .where({
+          user_id: userId,
+          "posts.is_deleted": false,
+          "post_comments.is_deleted": false,
+          is_story: false,
+        })
+        .select("posts.*", "post_comments.comment as user_comment")
         .orderBy("created_at", "desc");
     }
 

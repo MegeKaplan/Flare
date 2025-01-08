@@ -7,7 +7,11 @@ const Settings = () => {
   return (
     <>
       <div className="flex items-center justify-center flex-col p-2 w-full">
-        <h1 className="text-3xl text-center py-5 bg-secondary-200 rounded-t-3xl w-full">
+        <h1
+          className={`text-3xl text-center py-5 rounded-t-3xl w-full ${
+            localStorage.getItem("userId") ? "bg-blue-200" : "bg-secondary-200"
+          }`}
+        >
           Ayarlar
         </h1>
         {!localStorage.getItem("userId") ? (
@@ -20,56 +24,49 @@ const Settings = () => {
             </Link>
             <Link
               to={"/auth?page=login"}
-              className="text-2xl p-3 bg-secondary-100 mt-2 w-full"
+              className="text-2xl p-3 bg-secondary-50 mt-2 w-full"
             >
               Giriş Yap
             </Link>
           </>
         ) : (
           <>
-            <Link
-              to={"/user-actions?page=likes"}
-              className="text-2xl p-3 bg-secondary-100 mt-2 w-full"
-              onClick={() => {
-                toast.warning("Bu özellik henüz aktif değil.");
-              }}
-            >
-              Beğenileri Gör
-            </Link>
-            <Link
-              to={"/user-actions?page=saves"}
-              className="text-2xl p-3 bg-secondary-100 mt-2 w-full"
+            <div className="w-full flex items-center justify-center flex-row gap-2">
+              <Link
+                to={"/profile/interactions?page=likes"}
+                className="text-2xl p-3 bg-rose-100 mt-2 w-full text-center"
+              >
+                Beğeniler
+              </Link>
+              <Link
+                to={"/profile/interactions?page=saves"}
+                className="text-2xl p-3 bg-amber-100 mt-2 w-full text-center"
+              >
+                Kaydedilenler
+              </Link>
+            </div>
+            <div className="w-full flex items-center justify-center flex-row gap-2">
+              <Link
+                to={"/profile/interactions?page=comments"}
+                className="text-2xl p-3 bg-green-100 mt-2 w-full text-center"
+              >
+                Yorumlar
+              </Link>
+              <Link
+                to={"/auth?page=login"}
+                className="text-2xl p-3 bg-secondary-100 mt-2 w-full text-center"
                 onClick={() => {
-                toast.warning("Bu özellik henüz aktif değil.");
-                
-              }}
-            >
-              Kaydedilenleri Gör
-            </Link>
-            <Link
-              to={"/user-actions?page=comments"}
-              className="text-2xl p-3 bg-secondary-100 mt-2 w-full"
-                onClick={() => {
-                toast.warning("Bu özellik henüz aktif değil.");
-                
-              }}
-            >
-              Yorumları Gör
-            </Link>
-            <Link
-              to={"/auth?page=login"}
-              className="text-2xl p-3 bg-secondary-100 mt-2 w-full"
-              onClick={() => {
-                localStorage.clear();
-              }}
-            >
-              Çıkış Yap
-            </Link>
+                  localStorage.clear();
+                }}
+              >
+                Çıkış Yap
+              </Link>
+            </div>
           </>
         )}
         <Link
           to={"https://github.com/MegeKaplan/Flare"}
-          className="text-2xl p-3 bg-secondary-100 mt-2 w-full"
+          className="text-2xl p-3 bg-indigo-100 mt-2 w-full text-center rounded-b-3xl"
         >
           Bu Projeye Katkıda Bulun
         </Link>
