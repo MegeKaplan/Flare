@@ -74,11 +74,28 @@ const Stories = () => {
             key={story.id}
             className="flex items-center justify-center border-primary-400 border-[3px] rounded-2xl p-[2px] mx-1 size-16 whitespace-nowrap"
           >
-            <img
-              src={story.images ? story.images.split(",")[0] : ""}
-              alt="story"
-              className="size-14 rounded-xl"
-            />
+            {["jpg", "jpeg", "png", "gif", "webp"].includes(
+              story.images.split(",")[0].match(/\.([a-zA-Z0-9]+)(?=\?|$)/)[1]
+            ) ? (
+              <img
+                key={story.id}
+                src={story.images ? story.images.split(",")[0] : ""}
+                alt={story.content ? story.content : "story"}
+                className="size-14 rounded-xl"
+              />
+            ) : (
+              <video
+                key={story.id}
+                muted
+                autoPlay={false}
+                className="size-14 rounded-xl"
+              >
+                <source
+                  src={story.images.split(",")[0]}
+                  alt={story.content ? story.content : "story"}
+                />
+              </video>
+            )}
           </Link>
         ))}
       </div>
