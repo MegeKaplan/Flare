@@ -27,7 +27,6 @@ const UserInteractions = () => {
           }
         );
         setInteractions(response.data.response);
-        console.log(response.data.response);
         setLoading(false);
       } catch (error) {
         console.error(error);

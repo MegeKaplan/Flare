@@ -60,7 +60,7 @@ const CommentItem = ({ data, className }) => {
         <img
           src={commentData.pp_url || defaultProfilePicture}
           alt={`profile picture of ${commentData.username}`}
-          className="rounded-full select-none bg-secondary-100 shadow-sm"
+          className="rounded-full select-none bg-secondary-100 shadow-sm size-full"
         />
       </div>
       <div className="w-full">

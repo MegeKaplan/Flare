@@ -9,6 +9,7 @@ import defaultProfilePicture from "../assets/images/default-profile-picture.webp
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import RestrictedPageMessage from "../components/RestrictedPageMessage";
+import UserItem from "../components/UserItem";
 
 const Profile = () => {
   const [userData, setUserData] = useState();
@@ -20,6 +21,20 @@ const Profile = () => {
   const [posts, setPosts] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const navigate = useNavigate();
+  const [connections, setConnections] = useState({
+    followers: [],
+    following: [],
+  });
+  const [isSectionVisible, setIsSectionVisible] = useState({
+    posts: true,
+    followers: false,
+    following: false,
+  });
+  const [viewType, setViewType] = useState("card");
+
+  const toggleViewType = () => {
+    setViewType((prev) => (prev == "card" ? "list" : "card"));
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -58,6 +73,46 @@ const Profile = () => {
     };
     getPostsOfUser();
   }, [id]);
+
+  useEffect(() => {
+    setConnections({
+      followers: [],
+      following: [],
+    });
+    getConnections("followers").then((followers) => {
+      setConnections((prev) => {
+        return { ...prev, followers };
+      });
+    });
+    getConnections("following").then((following) => {
+      setConnections((prev) => {
+        return { ...prev, following };
+      });
+    });
+  }, [id, refresh]);
+
+  const getConnections = async (type) => {
+    try {
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/user/${id}/connections?type=${type}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      return response.data.response;
+    } catch (error) {}
+  };
+
+  const changeSectionVisibility = (section) => {
+    setIsSectionVisible({
+      posts: false,
+      followers: false,
+      following: false,
+      [section]: true,
+    });
+  };
 
   const followUser = async () => {
     try {
@@ -129,7 +184,12 @@ const Profile = () => {
           {userData.bio ? userData.bio : "Bu kullanıcı hakkında bilgi yok."}
         </p>
         <div className="w-full grid grid-cols-3 h-14 gap-1 my-2">
-          <div className="rounded-md bg-secondary-50 p-2 col-span-1 hover:bg-primary-50 transition duration-300">
+          <div
+            className={`rounded-md p-2 col-span-1 hover:bg-primary-200 transition duration-300 cursor-pointer shadow-sm select-none ${
+              isSectionVisible.posts ? "bg-primary-100" : "bg-secondary-50"
+            }`}
+            onClick={() => changeSectionVisibility("posts")}
+          >
             <span className="flex items-center justify-center text-xl font-normal">
               {posts.length}
             </span>
@@ -137,7 +197,13 @@ const Profile = () => {
               Gönderi
             </span>
           </div>
-          <div className="rounded-md bg-secondary-50 p-2 col-span-1 hover:bg-primary-50 transition duration-300">
+          <div
+            className={`rounded-md p-2 col-span-1 hover:bg-primary-200 transition duration-300 cursor-pointer shadow-sm select-none ${
+              isSectionVisible.followers ? "bg-primary-100" : "bg-secondary-50"
+            }`}
+            onClick={() => changeSectionVisibility("followers")}
+            onDoubleClick={() => toggleViewType(viewType)}
+          >
             <span className="flex items-center justify-center text-xl font-normal">
               {userData.followers ? userData.followers.split(",").length : 0}
             </span>
@@ -145,7 +211,13 @@ const Profile = () => {
               Takipçi
             </span>
           </div>
-          <div className="rounded-md bg-secondary-50 p-2 col-span-1 hover:bg-primary-50 transition duration-300">
+          <div
+            className={`rounded-md p-2 col-span-1 hover:bg-primary-200 transition duration-300 cursor-pointer shadow-sm select-none ${
+              isSectionVisible.following ? "bg-primary-100" : "bg-secondary-50"
+            }`}
+            onClick={() => changeSectionVisibility("following")}
+            onDoubleClick={() => toggleViewType(viewType)}
+          >
             <span className="flex items-center justify-center text-xl font-normal">
               {userData.followings ? userData.followings.split(",").length : 0}
             </span>
@@ -199,27 +271,44 @@ const Profile = () => {
           )}
         </div>
       </div>
-      <div className="w-full grid grid-cols-3 min-h-12 gap-3 mt-2">
-        {posts.length > 0 ? (
-          posts.map((post) => (
-            <Link
-              to={`/post/${post.id}`}
-              key={post.id}
-              className="col-span-1 border-primary-400 border-2 aspect-square flex items-center justify-center rounded-md overflow-hidden shadow-sm hover:scale-95 transition duration-300"
-            >
-              <img
-                src={post.images ? post.images.split(",")[0] : ""}
-                alt={post.content}
-                title={post.content}
-                className="select-none object-cover size-full transition duration-300 filter hover:brightness-75"
-              />
-            </Link>
-          ))
-        ) : (
-          <h1 className="col-span-3 text-center text-lg">
-            Burada görebileceğiniz bir gönderi yok.
-          </h1>
-        )}
+      <div
+        className={`w-full min-h-12 gap-3 mt-2 ${
+          isSectionVisible.posts
+            ? "grid grid-cols-3"
+            : viewType == "list"
+            ? "grid grid-cols-1"
+            : "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5"
+        }`}
+      >
+        {isSectionVisible.posts &&
+          (posts.length > 0 ? (
+            posts.map((post) => (
+              <Link
+                to={`/post/${post.id}`}
+                key={post.id}
+                className="col-span-1 border-primary-400 border-2 aspect-square flex items-center justify-center rounded-md overflow-hidden shadow-sm hover:scale-95 transition duration-300"
+              >
+                <img
+                  src={post.images ? post.images.split(",")[0] : ""}
+                  alt={post.content}
+                  title={post.content}
+                  className="select-none object-cover size-full transition duration-300 filter hover:brightness-75"
+                />
+              </Link>
+            ))
+          ) : (
+            <h1 className="col-span-3 text-center text-lg">
+              Burada görebileceğiniz bir gönderi yok.
+            </h1>
+          ))}
+        {isSectionVisible.followers &&
+          connections.followers.map((user) => (
+            <UserItem key={user.id} data={user} viewType={viewType} />
+          ))}
+        {isSectionVisible.following &&
+          connections.following.map((user) => (
+            <UserItem key={user.id} data={user} viewType={viewType} />
+          ))}
       </div>
     </div>
   );
