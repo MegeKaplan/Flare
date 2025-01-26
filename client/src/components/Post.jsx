@@ -298,7 +298,15 @@ const Post = ({ data, className }) => {
             postData.images.split(",")[0].match(/\.([a-zA-Z0-9]+)(?=\?|$)/)[1]
           ) ? (
             <img
-              src={postData.images && postData.images.split(",")[0]}
+              src={`${
+                import.meta.env.VITE_CLOUDINARY_BASE_URL
+              }/image/upload/flare/posts/${String(postData.id).padStart(
+                6,
+                "0"
+              )}${Number(postData.id) > 300 ? "-01" : ""}.webp`}
+              // src={`${
+              //   import.meta.env.VITE_CLOUDINARY_BASE_URL
+              // }/image/upload/flare/posts/${postData.filenames.split(",")[0]}`}
               alt="Resim Yükleniyor..."
               className="select-none object-cover size-full hover:object-fill hover:scale-95 transition duration-300 rounded-xl"
             />
@@ -310,7 +318,16 @@ const Post = ({ data, className }) => {
               className="select-none object-cover size-full hover:object-fill hover:scale-95 transition duration-300 rounded-xl"
             >
               <source
-                src={postData.images && postData.images.split(",")[0]}
+                // src={postData.images && postData.images.split(",")[0]}
+                src={`${
+                  import.meta.env.VITE_CLOUDINARY_BASE_URL
+                }/video/upload/flare/posts/${String(postData.id).padStart(
+                  6,
+                  "0"
+                )}${Number(postData.id) > 300 ? "-01" : ""}.mp4`}
+                // src={`${
+                //   import.meta.env.VITE_CLOUDINARY_BASE_URL
+                // }/image/upload/flare/posts/${postData.filenames.split(",")[0]}`}
                 alt="Video Yükleniyor..."
               />
               Your browser does not support the video tag.

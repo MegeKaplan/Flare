@@ -86,26 +86,19 @@ const EditPost = () => {
         }
       );
       if (typeof images[0] != "string") {
-        const response = await axios.delete(
-          `${import.meta.env.VITE_API_URL}/storage/${id}?tableName=post_images`,
+        const formData = new FormData();
+        images.forEach((image) => {
+          formData.append("files", image);
+        });
+        await axios.post(
+          `${import.meta.env.VITE_API_URL}/media?type=post&id=${id}`,
+          formData,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
           }
         );
-
-        const formData = new FormData();
-        images.forEach((image) => {
-          formData.append("files", image);
-        });
-        formData.append("id", id);
-        formData.append("tableName", "post_images");
-        await axios.post(`${import.meta.env.VITE_API_URL}/storage`, formData, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
       }
 
       if (response.status === 200) {

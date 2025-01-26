@@ -13,6 +13,7 @@ export const getPosts = async (req, res) => {
       .select(
         "posts.*",
         db.raw("GROUP_CONCAT(DISTINCT post_images.image_url) as images"),
+        db.raw("GROUP_CONCAT(DISTINCT post_images.filename) as filenames"),
         db.raw(
           "GROUP_CONCAT(DISTINCT CASE WHEN post_actions.action = 'like' THEN post_actions.user_id END) as likes"
         ),
@@ -70,6 +71,7 @@ export const getPost = async (req, res) => {
       .select(
         "posts.*",
         db.raw("GROUP_CONCAT(DISTINCT post_images.image_url) as images"),
+        db.raw("GROUP_CONCAT(DISTINCT post_images.filename) as filenames"),
         db.raw(
           "GROUP_CONCAT(DISTINCT CASE WHEN post_actions.action = 'like' THEN post_actions.user_id END) as likes"
         ),

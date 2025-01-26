@@ -65,13 +65,17 @@ const NewPost = () => {
       images.forEach((image) => {
         formData.append("files", image);
       });
-      formData.append("id", response.data.response);
-      formData.append("tableName", "post_images");
-      await axios.post(`${import.meta.env.VITE_API_URL}/storage`, formData, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/media?type=post&id=${
+          response.data.response
+        }`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       if (response.status === 201) {
         setImages([]);
         setPostData({

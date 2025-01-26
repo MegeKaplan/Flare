@@ -288,18 +288,17 @@ const Profile = () => {
                 key={post.id}
                 className="col-span-1 border-primary-400 border-2 aspect-square flex items-center justify-center rounded-md overflow-hidden shadow-sm hover:scale-95 transition duration-300"
               >
-                {/* <img
-                  src={post.images ? post.images.split(",")[0] : ""}
-                  alt={post.content}
-                  title={post.content}
-                  className="select-none object-cover size-full transition duration-300 filter hover:brightness-75"
-                /> */}
                 {["jpg", "jpeg", "png", "gif", "webp"].includes(
                   post.images.split(",")[0].match(/\.([a-zA-Z0-9]+)(?=\?|$)/)[1]
                 ) ? (
                   <img
                     key={post.id}
-                    src={post.images ? post.images.split(",")[0] : ""}
+                    src={`${
+                      import.meta.env.VITE_CLOUDINARY_BASE_URL
+                    }/image/upload/flare/posts/${String(post.id).padStart(
+                      6,
+                      "0"
+                    )}${Number(post.id) > 300 ? "-01" : ""}.webp`}
                     alt={
                       post.content
                         ? post.content
@@ -320,7 +319,12 @@ const Profile = () => {
                     className="select-none object-cover size-full transition duration-300 filter hover:brightness-75"
                   >
                     <source
-                      src={post.images.split(",")[0]}
+                      src={`${
+                        import.meta.env.VITE_CLOUDINARY_BASE_URL
+                      }/video/upload/flare/posts/${String(post.id).padStart(
+                        6,
+                        "0"
+                      )}${Number(post.id) > 300 ? "-01" : ""}.mp4`}
                       alt={
                         post.content
                           ? post.content
