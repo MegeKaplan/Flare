@@ -6,21 +6,10 @@ import fs from "fs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const supportedFileFormats = [
-  ".mp4",
-  ".mkv",
-  ".avi",
-  ".mov",
-  ".wmv",
-  ".flv",
-  ".jpg",
-  ".jpeg",
-  ".png",
-  ".webp",
-  ".bmp",
-  ".tiff",
-  ".gif",
-];
+const supportedFileFormats = {
+  video: [".mp4", ".mkv", ".avi", ".mov", ".wmv", ".flv"],
+  image: [".jpg", ".jpeg", ".png", ".webp", ".bmp", ".tiff", ".ico"],
+};
 
 const videoConfig = {
   crf: 30,
@@ -156,10 +145,10 @@ const processMediaFiles = async (files) => {
   for (const file of files) {
     const extension = path.extname(file.originalname).toLowerCase();
     try {
-      if (supportedFileFormats.includes(extension)) {
+      if (supportedFileFormats.video.includes(extension)) {
         const buffer = await compressVideo(file, videoConfig);
         processedFiles.push({ ...file, buffer });
-      } else if (supportedFileFormats.includes(extension)) {
+      } else if (supportedFileFormats.image.includes(extension)) {
         const buffer = await sharp(file.buffer)
           .rotate()
           .resize({ width: imageConfig.width })
