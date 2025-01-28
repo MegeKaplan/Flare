@@ -253,7 +253,7 @@ const Profile = () => {
                     text="Sohbeti Başlat"
                     color="indigo"
                     onClick={() => {
-                      toast.warning("Bu özellik henüz aktif değil!");
+                      navigate(`/profile/${id}/messages`);
                     }}
                   />
                 </>

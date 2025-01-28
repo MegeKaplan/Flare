@@ -18,6 +18,7 @@ import axios from "axios";
 import EditProfile from "./pages/EditProfile";
 import NotFound from "./pages/NotFound";
 import UserInteractions from "./pages/UserInteractions";
+import Messages from "./pages/Messages";
 
 function App() {
   const [userData, setUserData] = useState(
@@ -60,6 +61,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/profile/interactions" element={<UserInteractions />} />
         <Route path="/profile/:id" element={<Profile />} />
+        <Route path="/profile/:id/messages" element={<Messages />} />
         <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/post/:id" element={<ViewPost />} />
       </Routes>

@@ -11,6 +11,7 @@ export const MESSAGES = {
   FILE_LIMIT: (limit) => `En fazla ${limit} resim seçebilirsiniz!`,
   IMAGE_REQUIRED: "En az bir resim seçmelisiniz!",
   POST_CONTENT_REQUIRED: "Gönderi içeriği boş bırakılamaz!",
+  MESSAGE_TEXT_REQUIRED: "Mesaj boş bırakılamaz!",
   POST_NOT_FOUND: "Gönderi bulunamadı!",
   LINK_COPIED_TO_CLIPBOARD: "Link panoya kopyalandı.",
 };
