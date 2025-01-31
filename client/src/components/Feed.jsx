@@ -12,7 +12,7 @@ const Feed = ({ page }) => {
   const [offset, setOffset] = useState(
     page != "home" ? localStorage.getItem("offset") || 0 : 0
   );
-  const [limit] = useState(2);
+  const [limit] = useState(4);
   const [postsEmpty, setPostsEmpty] = useState(false);
 
   const fetchPosts = async (newOffset) => {
@@ -24,7 +24,8 @@ const Feed = ({ page }) => {
         }/posts?offset=${newOffset}&limit=${limit}&is_story=0`
       );
 
-      var fetchedPosts = response.data.response;
+      let fetchedPosts = response.data.response;
+
       if (page == "home") {
         try {
           fetchedPosts = response.data.response.filter((post) =>
@@ -37,8 +38,6 @@ const Feed = ({ page }) => {
           setPostsEmpty(true);
           fetchedPosts = [];
         }
-      } else {
-        fetchedPosts = response.data.response;
       }
 
       if (fetchedPosts.length > 0) {
@@ -88,6 +87,7 @@ const Feed = ({ page }) => {
         .map((post) => (
           <Post key={post.id} data={post} className="mb-8" />
         ))}
+      {loadingMore && <h1>{MESSAGES.CONTENT_LOADING}</h1>}
       {page != "home" && (
         <Button
           text="Eski Gönderileri Yükle"
@@ -99,7 +99,6 @@ const Feed = ({ page }) => {
           }}
         />
       )}
-      {loadingMore && <h1>{MESSAGES.CONTENT_LOADING}</h1>}
       {postsEmpty && <h1>Gönderileri görmek için birini takip etmeyi dene.</h1>}
     </div>
   );
