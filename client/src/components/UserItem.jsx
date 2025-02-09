@@ -1,6 +1,7 @@
 import React from "react";
 import defaultProfilePicture from "../assets/images/default-profile-picture.webp";
 import { Link } from "react-router-dom";
+import { FaStar } from "react-icons/fa6";
 
 const UserItem = ({ data, className, viewType }) => {
   viewType = viewType || "list";
@@ -20,7 +21,18 @@ const UserItem = ({ data, className, viewType }) => {
             />
           </div>
           <div className="px-2 truncate">
-            <h1 className="text-xl truncate">{data.username}</h1>
+            <h1 className="text-xl truncate flex items-center">
+              {data.username}
+              {data.is_verified ? (
+                <FaStar
+                  size={16}
+                  className="text-yellow-400 text-xs ml-1 mb-[1px]"
+                  title="Doğrulanmış Hesap"
+                />
+              ) : (
+                ""
+              )}
+            </h1>
             <p className="text-sm truncate">{data.bio}</p>
           </div>
         </Link>
@@ -40,7 +52,18 @@ const UserItem = ({ data, className, viewType }) => {
             />
           </div>
           <div className="w-full px-1 h-20 text-center">
-            <h1 className="text-lg truncate">{data.username}</h1>
+            <h1 className="text-lg truncate flex flex-row items-center justify-center">
+              {data.username}
+              {data.is_verified ? (
+                <FaStar
+                  size={16}
+                  className="text-yellow-400 text-xs ml-1 mb-[2px]"
+                  title="Doğrulanmış Hesap"
+                />
+              ) : (
+                ""
+              )}
+            </h1>
             <p className="text-sm truncate">{data.bio}</p>
           </div>
         </Link>

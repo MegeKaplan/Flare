@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FaHeart } from "react-icons/fa6";
+import { FaHeart, FaStar } from "react-icons/fa6";
 import { FaComment } from "react-icons/fa6";
 import { FaShare } from "react-icons/fa6";
 import { FaBookmark } from "react-icons/fa6";
@@ -237,9 +237,18 @@ const Post = ({ data, className }) => {
           <div className="flex justify-center flex-col ml-2 truncate w-full">
             <Link
               to={`/profile/${postData.sender_id}`}
-              className="text-xl text-secondary-900 truncate"
+              className="text-xl text-secondary-900 truncate flex items-center"
             >
               {postData.sender.username}
+              {postData.sender.is_verified ? (
+                <FaStar
+                  size={16}
+                  className="text-yellow-400 text-xs ml-1 mb-[1px]"
+                  title="Doğrulanmış Hesap"
+                />
+              ) : (
+                ""
+              )}
             </Link>
             {showFullDate ? (
               <span

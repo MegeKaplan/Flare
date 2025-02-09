@@ -19,6 +19,7 @@ import EditProfile from "./pages/EditProfile";
 import NotFound from "./pages/NotFound";
 import UserInteractions from "./pages/UserInteractions";
 import Messages from "./pages/Messages";
+import Forbidden from "./pages/Forbidden";
 
 function App() {
   const [userData, setUserData] = useState(
@@ -63,7 +64,9 @@ function App() {
         <Route path="/profile/:id" element={<Profile />} />
         <Route path="/profile/:id/messages" element={<Messages />} />
         <Route path="/edit-profile" element={<EditProfile />} />
+        <Route path="/edit-profile/:id" element={<EditProfile />} />
         <Route path="/post/:id" element={<ViewPost />} />
+        <Route path="/forbidden" element={<Forbidden />} />
       </Routes>
       <Nav />
       <ToastContainer {...toastifyContainerConfig} />

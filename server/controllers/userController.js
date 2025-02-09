@@ -17,11 +17,27 @@ export const getUsers = async (req, res) => {
         "users.id",
         "followings.follower_id"
       )
+      .join("roles", "users.role_id", "roles.id")
+      .leftJoin("role_permissions as rp", "roles.id", "rp.role_id")
+      .leftJoin("permissions as p", "rp.permission_id", "p.id")
       // .leftJoin("user_images as images", "users.id", "images.user_id")
       .select(
         "users.*",
         db.raw("GROUP_CONCAT(DISTINCT followers.follower_id) as followers"),
-        db.raw("GROUP_CONCAT(DISTINCT followings.following_id) as followings")
+        db.raw("GROUP_CONCAT(DISTINCT followings.following_id) as followings"),
+        db.raw(`JSON_OBJECT(
+                'name', roles.name,
+                'description', roles.description,
+                'slug', roles.slug,
+                'color', roles.color
+              ) as role`),
+        db.raw(`GROUP_CONCAT(
+                DISTINCT JSON_OBJECT(
+                  'id', p.id,
+                  'name', p.name,
+                  'slug', p.slug
+                )
+              ) as permissions`)
         // db.raw(`GROUP_CONCAT(DISTINCT CASE WHEN images.type = 'banner' THEN images.image_url END) as bannerUrl`),
         // db.raw(`GROUP_CONCAT(DISTINCT CASE WHEN images.type = 'profile_picture' THEN images.image_url END) as profilePictureUrl`)
       )
@@ -54,11 +70,27 @@ export const getUser = async (req, res) => {
         "users.id",
         "followings.follower_id"
       )
+      .join("roles", "users.role_id", "roles.id")
+      .leftJoin("role_permissions as rp", "roles.id", "rp.role_id")
+      .leftJoin("permissions as p", "rp.permission_id", "p.id")
       // .leftJoin("user_images as images", "users.id", "images.user_id")
       .select(
         "users.*",
         db.raw("GROUP_CONCAT(DISTINCT followers.follower_id) as followers"),
-        db.raw("GROUP_CONCAT(DISTINCT followings.following_id) as followings")
+        db.raw("GROUP_CONCAT(DISTINCT followings.following_id) as followings"),
+        db.raw(`JSON_OBJECT(
+                'name', roles.name,
+                'description', roles.description,
+                'slug', roles.slug,
+                'color', roles.color
+              ) as role`),
+        db.raw(`GROUP_CONCAT(
+                DISTINCT JSON_OBJECT(
+                  'id', p.id,
+                  'name', p.name,
+                  'slug', p.slug
+                )
+              ) as permissions`)
         // db.raw(`GROUP_CONCAT(DISTINCT CASE WHEN images.type = 'banner' THEN images.image_url END) as bannerUrl`),
         // db.raw(`GROUP_CONCAT(DISTINCT CASE WHEN images.type = 'profile_picture' THEN images.image_url END) as profilePictureUrl`)
       )

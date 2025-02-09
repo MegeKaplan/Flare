@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import RestrictedPageMessage from "../components/RestrictedPageMessage";
 import UserItem from "../components/UserItem";
+import { FaStar } from "react-icons/fa6";
 
 const Profile = () => {
   const [userData, setUserData] = useState();
@@ -179,7 +180,46 @@ const Profile = () => {
         </div>
       </div>
       <div className="flex items-center justify-center flex-col border-b">
-        <h1 className="text-2xl">{userData.username}</h1>
+        <h1 className="text-2xl flex items-center justify-center relative group">
+          {userData.username}
+          {userData.is_verified ? (
+            <FaStar
+              size={16}
+              className="text-yellow-400 text-xs ml-1"
+              title="Doğrulanmış Hesap"
+            />
+          ) : (
+            ""
+          )}
+          <span
+            className={`bg-[${
+              JSON.parse(userData.role).color
+            }] text-xs p-1 rounded-sm bg-opacity-50 mx-2 absolute right-[-15px] translate-x-full select-none`}
+            style={{
+              backgroundColor: `rgba(${parseInt(
+                JSON.parse(userData.role).color.slice(1, 3),
+                16
+              )}, ${parseInt(
+                JSON.parse(userData.role).color.slice(3, 5),
+                16
+              )}, ${parseInt(
+                JSON.parse(userData.role).color.slice(5, 7),
+                16
+              )}, 0.5)`,
+            }}
+          >
+            {JSON.parse(userData.role).name}
+            <span
+              className={`w-36 sm:w-64 md:w-96 text-center absolute bottom-full left-1/2 transform -translate-x-1/2 -translate-y-1 p-2 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-100 hover:hidden`}
+              style={{
+                backgroundColor: JSON.parse(userData.role).color,
+              }}
+            >
+              {JSON.parse(userData.role).description}
+            </span>
+          </span>
+        </h1>
+
         <p className="text-center">
           {userData.bio ? userData.bio : "Bu kullanıcı hakkında bilgi yok."}
         </p>
@@ -226,10 +266,12 @@ const Profile = () => {
             </span>
           </div>
         </div>
-        <div className="flex items-center justify-center flex-row my-2 w-full gap-2">
+        {/* <div className="flex items-center justify-center flex-row my-2 w-full gap-2"> */}
+        <div className="grid grid-cols-2 my-2 w-full gap-2">
           {isMyProfile ? (
             <>
               <Button
+                className="col-span-2"
                 text="Düzenle"
                 color="primary"
                 onClick={() => {
@@ -242,6 +284,7 @@ const Profile = () => {
               {followed ? (
                 <>
                   <Button
+                    className="col-span-1"
                     text="Takipten Çık"
                     color="primary"
                     onClick={() => {
@@ -250,6 +293,7 @@ const Profile = () => {
                     }}
                   />
                   <Button
+                    className="col-span-1"
                     text="Sohbeti Başlat"
                     color="indigo"
                     onClick={() => {
@@ -259,6 +303,7 @@ const Profile = () => {
                 </>
               ) : (
                 <Button
+                  className="col-span-2"
                   text="Takip Et"
                   color="primary"
                   onClick={() => {
@@ -267,6 +312,28 @@ const Profile = () => {
                   }}
                 />
               )}
+              {["founder", "admin", "moderator"].includes(
+                JSON.parse(JSON.parse(localStorage.getItem("userData")).role)
+                  .slug
+              ) && (
+                <Button
+                  className="col-span-2"
+                  text="Kullanıcıyı Düzenle"
+                  color="emerald"
+                  onClick={() => {
+                    navigate(`/edit-profile/${userData.id}/`);
+                  }}
+                />
+              )}
+              {/* {console.log(
+                JSON.parse(
+                  `[${JSON.parse(
+                    localStorage.getItem("userData")
+                  ).permissions.replace(/}\s*,\s*{/g, "}, {")}]`
+                )
+                  .map((permission) => permission.slug)
+                  .includes("assign_role")
+              )} */}
             </>
           )}
         </div>

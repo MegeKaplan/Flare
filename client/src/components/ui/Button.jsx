@@ -5,6 +5,8 @@ const COLORS = {
   secondary: "bg-secondary-400",
   indigo: "bg-indigo-400",
   danger: "bg-red-400",
+  success: "bg-emerald-400",
+  emerald: "bg-emerald-400",
 };
 
 const Button = ({
