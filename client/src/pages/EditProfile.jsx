@@ -410,42 +410,44 @@ const EditProfile = () => {
           </div>
         </form>
       </div>
-      <div className="w-full h-auto flex items-center justify-center mt-2 mb-20">
-        <div className="w-11/12 h-auto bg-secondary-100 p-2 mt-4 rounded-lg border max-h-[75vh] overflow-y-scroll flex items-center justify-center flex-col">
-          <h1 className="text-xl">Rol Atama</h1>
-          <div className="w-full">
-            {roles.map((role) => (
-              <div
-                key={role.id}
-                className={`flex items-center rounded-md mt-2 w-full bg-opacity-25 border-dashed border-2 ${
-                  selectedRoleId == role.id && `shadow-md opacity-100`
-                }`}
-                style={{
-                  backgroundColor: role.color,
-                  borderColor: role.color,
-                  opacity: selectedRoleId == role.id ? 1 : 0.5,
-                }}
-              >
-                <input
-                  type="radio"
-                  name="role"
-                  value={role.slug}
-                  id={role.slug}
-                  checked={selectedRoleId == role.id}
-                  onChange={() => setRole(role.id)}
-                  className="hidden"
-                />
-                <label
-                  className="w-full p-3 cursor-pointer"
-                  htmlFor={role.slug}
+      {isAdmin && (
+        <div className="w-full h-auto flex items-center justify-center mt-2 mb-20">
+          <div className="w-11/12 h-auto bg-secondary-100 p-2 mt-4 rounded-lg border max-h-[75vh] overflow-y-scroll flex items-center justify-center flex-col">
+            <h1 className="text-xl">Rol Atama</h1>
+            <div className="w-full">
+              {roles.map((role) => (
+                <div
+                  key={role.id}
+                  className={`flex items-center rounded-md mt-2 w-full bg-opacity-25 border-dashed border-2 ${
+                    selectedRoleId == role.id && `shadow-md opacity-100`
+                  }`}
+                  style={{
+                    backgroundColor: role.color,
+                    borderColor: role.color,
+                    opacity: selectedRoleId == role.id ? 1 : 0.5,
+                  }}
                 >
-                  {role.name}
-                </label>
-              </div>
-            ))}
+                  <input
+                    type="radio"
+                    name="role"
+                    value={role.slug}
+                    id={role.slug}
+                    checked={selectedRoleId == role.id}
+                    onChange={() => setRole(role.id)}
+                    className="hidden"
+                  />
+                  <label
+                    className="w-full p-3 cursor-pointer"
+                    htmlFor={role.slug}
+                  >
+                    {role.name}
+                  </label>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
